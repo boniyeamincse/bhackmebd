@@ -3,7 +3,13 @@ const DockerService = require('../../services/docker.service');
 const startTerminal = async (req, res, next) => {
   try {
     const container = await DockerService.getOrCreateContainer(req.user.id);
-    res.json({ containerId: container.id, status: 'ready' });
+    const status = await DockerService.getContainerStatus(req.user.id);
+    res.json({
+      containerId: container.id,
+      containerIp: status.containerIp || null,
+      expiresAt: status.expiresAt || null,
+      status: 'ready',
+    });
   } catch (err) {
     next(err);
   }
