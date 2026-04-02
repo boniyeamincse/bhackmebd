@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import Navbar from '@/components/layout/Navbar';
 import XPBar from '@/components/gamification/XPBar';
 import BadgeGallery from '@/components/gamification/BadgeGallery';
@@ -7,14 +7,13 @@ import { withAuth } from '@/components/auth/withAuth';
 import { useAuthStore } from '@/store/auth.store';
 import api from '@/lib/api';
 
-type ProgressRow = { chapterId: string | null; status: string };
+type ProgressRow = { chapterId: string | null; lessonId?: string | null; taskId?: string | null; status: string };
 
 function ProfilePage() {
   const user = useAuthStore((s) => s.user);
   const token = useAuthStore((s) => s.token);
   const setAuth = useAuthStore((s) => s.setAuth);
   const refreshToken = useAuthStore((s) => s.refreshToken);
-  const queryClient = useQueryClient();
 
   const [fullName, setFullName] = useState(user?.full_name || '');
   const [isEditing, setIsEditing] = useState(false);
@@ -53,6 +52,19 @@ function ProfilePage() {
     return Array.from(byChapter.entries()).filter(([, done]) => done).map(([id]) => id);
   }, [data]);
 
+  const progressStats = useMemo(() => {
+    const rows = data?.progress || [];
+    const completed = rows.filter((r) => r.status === 'completed').length;
+    const total = rows.length;
+    const completionRate = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+    return {
+      totalTasksTracked: total,
+      completedTasks: completed,
+      completionRate,
+    };
+  }, [data]);
+
   if (!user || !token) return null;
 
   const handleAvatarChange = (file?: File) => {
@@ -74,10 +86,12 @@ function ProfilePage() {
   return (
     <div className="min-h-screen bg-[#05070a] text-gray-200">
       <Navbar />
-      <main className="max-w-5xl mx-auto px-4 py-12 space-y-8">
-        <header>
-          <h1 className="text-4xl font-black text-white tracking-tight leading-none uppercase">Mission Control</h1>
-          <p className="text-gray-500 mt-2 font-mono uppercase tracking-widest text-xs">Personnel File: {user.username}</p>
+      <main className="max-w-6xl mx-auto px-4 py-12 space-y-8">
+        <header className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 via-white/[0.02] to-terminal-green/5 px-6 py-8 md:px-8">
+          <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-terminal-green/10 blur-3xl pointer-events-none" />
+          <p className="text-gray-500 font-mono uppercase tracking-[0.25em] text-[10px]">Operator Profile</p>
+          <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight leading-none uppercase mt-2">Mission Control</h1>
+          <p className="text-gray-400 mt-3 font-medium text-sm">Identity, rank progression, and chapter completion intelligence for {user.username}.</p>
         </header>
 
         <section className="relative overflow-hidden bg-gray-900/30 border border-white/5 rounded-3xl p-8 backdrop-blur-md shadow-[0_0_50px_rgba(0,0,0,0.5)]">
@@ -95,10 +109,14 @@ function ProfilePage() {
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-100 transition-opacity"></div>
               </div>
+              <div className="absolute top-3 right-3 w-3 h-3 rounded-full bg-terminal-green shadow-[0_0_12px_rgba(0,255,159,0.8)]" title="Online" />
               <label className="absolute -bottom-3 -right-3 bg-terminal-green text-black p-3 rounded-2xl cursor-pointer hover:scale-110 active:scale-95 transition-all shadow-[0_0_20px_rgba(0,255,159,0.3)] border-4 border-[#05070a]">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                 <input type="file" accept="image/*" className="hidden" onChange={(e) => handleAvatarChange(e.target.files?.[0])} />
               </label>
+              {uploadAvatarMutation.isPending && (
+                <p className="text-[10px] mt-6 text-terminal-green font-mono uppercase tracking-wider text-center">Uploading avatar...</p>
+              )}
             </div>
 
             <div className="flex-1 text-center md:text-left space-y-6">
@@ -113,7 +131,7 @@ function ProfilePage() {
                 <p className="text-gray-500 font-mono text-sm tracking-tight">{user.email}</p>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-2 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em]">Deployment Identity</p>
                 {isEditing ? (
                   <div className="flex gap-2 max-w-md">
@@ -125,7 +143,13 @@ function ProfilePage() {
                       className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white w-full focus:outline-none focus:border-terminal-green/50 transition-all font-medium"
                       placeholder="Enter Full Name"
                     />
-                    <button onClick={handleSaveProfile} className="bg-terminal-green text-black px-6 py-2 rounded-xl font-black text-xs hover:shadow-[0_0_20px_rgba(0,255,159,0.4)] transition-all">SAVE</button>
+                    <button
+                      onClick={handleSaveProfile}
+                      disabled={updateProfileMutation.isPending}
+                      className="bg-terminal-green text-black px-6 py-2 rounded-xl font-black text-xs hover:shadow-[0_0_20px_rgba(0,255,159,0.4)] transition-all disabled:opacity-60"
+                    >
+                      {updateProfileMutation.isPending ? 'SAVING' : 'SAVE'}
+                    </button>
                     <button onClick={() => setIsEditing(false)} className="bg-white/5 text-gray-400 px-4 py-2 rounded-xl font-bold text-xs border border-white/10 hover:bg-white/10 transition-all">ESC</button>
                   </div>
                 ) : (
@@ -142,7 +166,7 @@ function ProfilePage() {
                 <XPBar xp={user.total_xp} />
                 <div className="flex justify-between mt-2 font-mono text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                   <span className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-terminal-green"></span> Level: {user.level}</span>
-                  <span>Progress: {user.total_xp} XP</span>
+                  <span>Total XP: {user.total_xp}</span>
                 </div>
               </div>
             </div>
@@ -173,19 +197,27 @@ function ProfilePage() {
                   <p className="text-3xl font-black text-white group-hover:text-terminal-green transition-colors">{completedChapters.length}</p>
                 </div>
                 <div className="bg-white/5 p-5 rounded-2xl border border-white/5 text-center group hover:border-terminal-green/30 transition-all cursor-default">
-                  <p className="text-[10px] text-gray-500 font-bold uppercase mb-2 tracking-widest">Rank</p>
-                  <p className="text-3xl font-black text-white group-hover:text-terminal-green transition-colors">{completedChapters.length > 5 ? 'Elite' : 'Active'}</p>
+                  <p className="text-[10px] text-gray-500 font-bold uppercase mb-2 tracking-widest">Tasks Done</p>
+                  <p className="text-3xl font-black text-white group-hover:text-terminal-green transition-colors">{progressStats.completedTasks}</p>
+                </div>
+                <div className="bg-white/5 p-5 rounded-2xl border border-white/5 text-center group hover:border-terminal-green/30 transition-all cursor-default">
+                  <p className="text-[10px] text-gray-500 font-bold uppercase mb-2 tracking-widest">Completion</p>
+                  <p className="text-3xl font-black text-white group-hover:text-terminal-green transition-colors">{progressStats.completionRate}%</p>
+                </div>
+                <div className="bg-white/5 p-5 rounded-2xl border border-white/5 text-center group hover:border-terminal-green/30 transition-all cursor-default">
+                  <p className="text-[10px] text-gray-500 font-bold uppercase mb-2 tracking-widest">Badges</p>
+                  <p className="text-3xl font-black text-white group-hover:text-terminal-green transition-colors">{user.badges?.length || 0}</p>
                 </div>
               </div>
               
               <div className="space-y-4">
                 <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Decrypted Intel</p>
-                <div className="space-y-3">
+                <div className="space-y-3 max-h-56 overflow-auto pr-1">
                   {completedChapters.length > 0 ? (
-                    completedChapters.map((id) => (
+                    completedChapters.slice(0, 10).map((id) => (
                       <div key={id} className="flex items-center gap-3 text-[10px] font-mono text-gray-400 bg-white/5 p-3 rounded-xl border border-white/5 hover:bg-white/10 transition-all cursor-default group">
                         <span className="w-1.5 h-1.5 rounded-full bg-terminal-green group-hover:animate-ping"></span>
-                        <span className="truncate">{id.toUpperCase()}</span>
+                        <span className="truncate">CHAPTER {id.slice(0, 8).toUpperCase()} COMPLETED</span>
                       </div>
                     ))
                   ) : (
@@ -197,7 +229,7 @@ function ProfilePage() {
               </div>
             </div>
             <div className="p-4 bg-terminal-green/5 border-t border-white/5 text-center">
-               <p className="text-[8px] font-mono text-terminal-green/50 uppercase tracking-[0.3em]">System Version 1.0.4 - B-HackMe Protocol</p>
+               <p className="text-[8px] font-mono text-terminal-green/50 uppercase tracking-[0.3em]">System Version 1.1.0 - B-HackMe Profile Module</p>
             </div>
           </section>
         </div>
