@@ -47,7 +47,14 @@ const login = async (req, res, next) => {
       accessToken,
       refreshToken,
       streak,
-      user: { id: user.id, username: user.username, email: user.email, role: user.role },
+      user: { 
+        id: user.id, 
+        username: user.username, 
+        email: user.email, 
+        role: user.role,
+        level: user.level,
+        total_xp: user.total_xp
+      },
     });
   } catch (err) {
     next(err);

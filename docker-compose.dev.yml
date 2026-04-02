@@ -49,6 +49,8 @@ services:
       - DATABASE_URL=postgresql://bhackme:secret@postgres:5432/bhackme
       - REDIS_URL=redis://redis:6379
       - JWT_SECRET=dev-jwt-secret-change-in-production
+      - REFRESH_TOKEN_SECRET=dev-refresh-token-secret-change-in-production
+      - APP_URL=http://localhost:3000
       - DOCKER_SOCKET=/var/run/docker.sock
       - USER_CONTAINER_IMAGE=bhackme/terminal:latest
       - MAX_CONTAINERS=10

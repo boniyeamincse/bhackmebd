@@ -9,11 +9,12 @@ interface Props {
   xp: number;
 }
 
-export default function XPBar({ xp }: Props) {
+export default function XPBar({ xp = 0 }: Props) {
   const current = LEVELS.find((l) => xp >= l.min && xp <= l.max) ?? LEVELS[0];
   const next = LEVELS[LEVELS.indexOf(current) + 1];
-  const pct = next ? Math.round(((xp - current.min) / (next.min - current.min)) * 100) : 100;
-  const xpToNext = next ? Math.max(next.min - xp, 0) : 0;
+  const safeXp = xp ?? 0;
+  const pct = next ? Math.round(((safeXp - current.min) / (next.min - current.min)) * 100) : 100;
+  const xpToNext = next ? Math.max(next.min - safeXp, 0) : 0;
 
   return (
     <div className="w-full">
@@ -23,7 +24,7 @@ export default function XPBar({ xp }: Props) {
           <span className={`text-sm font-bold ${current.color} font-mono uppercase tracking-tight`}>{current.label}</span>
         </div>
         <span className="text-xs font-mono text-gray-400">
-          <span className="text-white font-bold">{xp.toLocaleString()}</span> / {next ? next.min.toLocaleString() : 'MAX'} XP
+          <span className="text-white font-bold">{safeXp.toLocaleString()}</span> / {next ? next.min.toLocaleString() : 'MAX'} XP
         </span>
       </div>
       
