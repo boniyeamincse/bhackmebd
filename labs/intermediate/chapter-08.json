@@ -1,0 +1,293 @@
+{
+  "id": "chapter-08",
+  "title": "Disk and Storage Management Lab",
+  "level": "intermediate",
+  "order_index": 8,
+  "xp_reward": 100,
+  "lessons": [
+    {
+      "title": "Learn: Disk and Storage Management",
+      "order_index": 1,
+      "xp_reward": 10,
+      "content_md": "# Lab 08: Disk and Storage Management\n\nDisk and storage management is about understanding how space is used, how to inspect storage devices, and how to organize files safely.\n\n## Learning Objectives\n\n- Check filesystem capacity with `df`\n- Measure directory and file usage with `du`\n- Inspect block devices with `lsblk`\n- Archive and restore data with `tar`\n- Resize and verify files safely with `truncate` and `stat`\n\n## Core Topics\n\n### 1) Filesystem Capacity\n\n```bash\ndf -h\ndf -h /\n```\n\n### 2) Directory Space Analysis\n\n```bash\ndu -sh ~/lab8\ndu -ah ~/lab8 | sort -h | tail -n 10\n```\n\n### 3) Device Visibility\n\n```bash\nlsblk\n```\n\n### 4) Archiving and Recovery\n\n```bash\ntar -czf backup.tar.gz folder/\ntar -xzf backup.tar.gz\n```\n\n### 5) Safe Storage Habits\n\n- Check free space before creating large files\n- Use archives for transfer and backup workflows\n- Verify size after resize operations\n- Avoid deleting unknown system files\n\nAfter Learn, complete command practice, then exercises, then MCQ.",
+      "tasks": []
+    },
+    {
+      "title": "Command Practice Part 1 (10 Commands)",
+      "order_index": 2,
+      "xp_reward": 35,
+      "content_md": "## Guided Commands: Part 1\n\nCreate lab data and inspect usage.\n\n```bash\ncd ~ && mkdir -p ~/lab8/storageA ~/lab8/storageB\ndd if=/dev/zero of=~/lab8/storageA/file1.bin bs=1K count=64 status=none && echo FILE1_CREATED\ntruncate -s 2M ~/lab8/storageA/file2.img && echo FILE2_CREATED\ndu -sh ~/lab8/storageA\ndf -h /\nlsblk | head -n 10\nfind ~/lab8 -type f | wc -l\ndu -ah ~/lab8/storageA | sort -h | tail -n 5\nmkdir -p ~/lab8/archive && cp ~/lab8/storageA/file1.bin ~/lab8/archive/\nln -s ~/lab8/storageA/file2.img ~/lab8/storageB/file2-link.img && echo SYMLINK_OK\n```",
+      "tasks": [
+        {
+          "description": "C01: Create lab8 storage directories.",
+          "expected_output": "storageA",
+          "validation_type": "contains",
+          "hint": "Type: cd ~ && mkdir -p ~/lab8/storageA ~/lab8/storageB && ls ~/lab8",
+          "xp_reward": 2,
+          "order_index": 1
+        },
+        {
+          "description": "C02: Create file1.bin (64KB) and print marker FILE1_CREATED.",
+          "expected_output": "FILE1_CREATED",
+          "validation_type": "contains",
+          "hint": "Type: dd if=/dev/zero of=~/lab8/storageA/file1.bin bs=1K count=64 status=none && echo FILE1_CREATED",
+          "xp_reward": 2,
+          "order_index": 2
+        },
+        {
+          "description": "C03: Create file2.img (2MB) and print marker FILE2_CREATED.",
+          "expected_output": "FILE2_CREATED",
+          "validation_type": "contains",
+          "hint": "Type: truncate -s 2M ~/lab8/storageA/file2.img && echo FILE2_CREATED",
+          "xp_reward": 2,
+          "order_index": 3
+        },
+        {
+          "description": "C04: Show total size of storageA directory.",
+          "expected_output": "lab8/storageA",
+          "validation_type": "contains",
+          "hint": "Type: du -sh ~/lab8/storageA",
+          "xp_reward": 2,
+          "order_index": 4
+        },
+        {
+          "description": "C05: Show filesystem usage for root mount.",
+          "expected_output": "/",
+          "validation_type": "contains",
+          "hint": "Type: df -h /",
+          "xp_reward": 2,
+          "order_index": 5
+        },
+        {
+          "description": "C06: Show block device overview.",
+          "expected_output": "NAME",
+          "validation_type": "contains",
+          "hint": "Type: lsblk | head -n 10",
+          "xp_reward": 2,
+          "order_index": 6
+        },
+        {
+          "description": "C07: Count files inside lab8.",
+          "expected_output": "2",
+          "validation_type": "contains",
+          "hint": "Type: find ~/lab8 -type f | wc -l",
+          "xp_reward": 2,
+          "order_index": 7
+        },
+        {
+          "description": "C08: Display largest entries inside storageA.",
+          "expected_output": "file2.img",
+          "validation_type": "contains",
+          "hint": "Type: du -ah ~/lab8/storageA | sort -h | tail -n 5",
+          "xp_reward": 2,
+          "order_index": 8
+        },
+        {
+          "description": "C09: Copy file1.bin to archive directory.",
+          "expected_output": "file1.bin",
+          "validation_type": "contains",
+          "hint": "Type: mkdir -p ~/lab8/archive && cp ~/lab8/storageA/file1.bin ~/lab8/archive/ && ls ~/lab8/archive",
+          "xp_reward": 2,
+          "order_index": 9
+        },
+        {
+          "description": "C10: Create symbolic link for file2.img and print marker.",
+          "expected_output": "SYMLINK_OK",
+          "validation_type": "contains",
+          "hint": "Type: ln -s ~/lab8/storageA/file2.img ~/lab8/storageB/file2-link.img && echo SYMLINK_OK",
+          "xp_reward": 2,
+          "order_index": 10
+        }
+      ]
+    },
+    {
+      "title": "Command Practice Part 2 (10 Commands)",
+      "order_index": 3,
+      "xp_reward": 35,
+      "content_md": "## Guided Commands: Part 2\n\nPractice archive, restore, and resize workflows.\n\n```bash\ntar -czf ~/lab8/storageA.tar.gz -C ~/lab8 storageA && echo TAR_CREATED\nls -lh ~/lab8/storageA.tar.gz\nmkdir -p ~/lab8/restore && tar -xzf ~/lab8/storageA.tar.gz -C ~/lab8/restore && echo TAR_EXTRACTED\ndu -sh ~/lab8/restore/storageA\nfind ~/lab8 -type f -name '*.bin'\nstat ~/lab8/storageA/file1.bin | head -n 5\ntruncate -s 1M ~/lab8/storageA/file2.img && echo RESIZED\ndu -sh ~/lab8/storageA\nrm -f ~/lab8/archive/file1.bin && echo ARCHIVE_FILE_REMOVED\nfind ~/lab8 -maxdepth 2 -type d | sort\n```",
+      "tasks": [
+        {
+          "description": "C11: Create compressed archive storageA.tar.gz and print marker.",
+          "expected_output": "TAR_CREATED",
+          "validation_type": "contains",
+          "hint": "Type: tar -czf ~/lab8/storageA.tar.gz -C ~/lab8 storageA && echo TAR_CREATED",
+          "xp_reward": 2,
+          "order_index": 1
+        },
+        {
+          "description": "C12: Show archive file details in human readable format.",
+          "expected_output": "storageA.tar.gz",
+          "validation_type": "contains",
+          "hint": "Type: ls -lh ~/lab8/storageA.tar.gz",
+          "xp_reward": 2,
+          "order_index": 2
+        },
+        {
+          "description": "C13: Extract archive into restore folder and print marker.",
+          "expected_output": "TAR_EXTRACTED",
+          "validation_type": "contains",
+          "hint": "Type: mkdir -p ~/lab8/restore && tar -xzf ~/lab8/storageA.tar.gz -C ~/lab8/restore && echo TAR_EXTRACTED",
+          "xp_reward": 2,
+          "order_index": 3
+        },
+        {
+          "description": "C14: Show size of restored storageA directory.",
+          "expected_output": "restore/storageA",
+          "validation_type": "contains",
+          "hint": "Type: du -sh ~/lab8/restore/storageA",
+          "xp_reward": 2,
+          "order_index": 4
+        },
+        {
+          "description": "C15: Find .bin files inside lab8.",
+          "expected_output": "file1.bin",
+          "validation_type": "contains",
+          "hint": "Type: find ~/lab8 -type f -name '*.bin'",
+          "xp_reward": 2,
+          "order_index": 5
+        },
+        {
+          "description": "C16: Inspect metadata of file1.bin.",
+          "expected_output": "File:",
+          "validation_type": "contains",
+          "hint": "Type: stat ~/lab8/storageA/file1.bin | head -n 5",
+          "xp_reward": 2,
+          "order_index": 6
+        },
+        {
+          "description": "C17: Resize file2.img to 1MB and print RESIZED marker.",
+          "expected_output": "RESIZED",
+          "validation_type": "contains",
+          "hint": "Type: truncate -s 1M ~/lab8/storageA/file2.img && echo RESIZED",
+          "xp_reward": 2,
+          "order_index": 7
+        },
+        {
+          "description": "C18: Recheck total size of storageA after resize.",
+          "expected_output": "lab8/storageA",
+          "validation_type": "contains",
+          "hint": "Type: du -sh ~/lab8/storageA",
+          "xp_reward": 2,
+          "order_index": 8
+        },
+        {
+          "description": "C19: Remove copied archive file and print marker.",
+          "expected_output": "ARCHIVE_FILE_REMOVED",
+          "validation_type": "contains",
+          "hint": "Type: rm -f ~/lab8/archive/file1.bin && echo ARCHIVE_FILE_REMOVED",
+          "xp_reward": 2,
+          "order_index": 9
+        },
+        {
+          "description": "C20: List lab8 directories up to depth 2.",
+          "expected_output": "lab8/restore",
+          "validation_type": "contains",
+          "hint": "Type: find ~/lab8 -maxdepth 2 -type d | sort",
+          "xp_reward": 2,
+          "order_index": 10
+        }
+      ]
+    },
+    {
+      "title": "Exercises (5)",
+      "order_index": 4,
+      "xp_reward": 10,
+      "content_md": "## Practical Exercises\n\nComplete all exercises to prove disk and storage management skills.\n\n- E1-E2: easy\n- E3-E4: medium\n- E5: medium-hard",
+      "tasks": [
+        {
+          "description": "E1: Create ~/lab8/ex1 with 3 files (128K, 256K, 512K) and print EX1_READY.",
+          "expected_output": "EX1_READY",
+          "validation_type": "contains",
+          "hint": "Type: mkdir -p ~/lab8/ex1 && truncate -s 128K ~/lab8/ex1/a.dat && truncate -s 256K ~/lab8/ex1/b.dat && truncate -s 512K ~/lab8/ex1/c.dat && echo EX1_READY",
+          "xp_reward": 6,
+          "order_index": 1
+        },
+        {
+          "description": "E2: Create ex1 archive ex1.tar.gz and print EX1_ARCHIVED.",
+          "expected_output": "EX1_ARCHIVED",
+          "validation_type": "contains",
+          "hint": "Type: tar -czf ~/lab8/ex1.tar.gz -C ~/lab8 ex1 && echo EX1_ARCHIVED",
+          "xp_reward": 6,
+          "order_index": 2
+        },
+        {
+          "description": "E3: Extract ex1.tar.gz into ~/lab8/ex1-restore and print EX1_RESTORED.",
+          "expected_output": "EX1_RESTORED",
+          "validation_type": "contains",
+          "hint": "Type: mkdir -p ~/lab8/ex1-restore && tar -xzf ~/lab8/ex1.tar.gz -C ~/lab8/ex1-restore && echo EX1_RESTORED",
+          "xp_reward": 6,
+          "order_index": 3
+        },
+        {
+          "description": "E4: Resize ~/lab8/ex1/a.dat to 64K and confirm SIZE_64K_OK.",
+          "expected_output": "SIZE_64K_OK",
+          "validation_type": "contains",
+          "hint": "Type: truncate -s 64K ~/lab8/ex1/a.dat && [[ $(stat -c%s ~/lab8/ex1/a.dat) -eq 65536 ]] && echo SIZE_64K_OK",
+          "xp_reward": 6,
+          "order_index": 4
+        },
+        {
+          "description": "E5: Show total size of ~/lab8/ex1 and print marker EX1_SIZE_DONE.",
+          "expected_output": "EX1_SIZE_DONE",
+          "validation_type": "contains",
+          "hint": "Type: du -sh ~/lab8/ex1 && echo EX1_SIZE_DONE",
+          "xp_reward": 6,
+          "order_index": 5
+        }
+      ]
+    },
+    {
+      "title": "MCQ Quiz (5)",
+      "order_index": 5,
+      "xp_reward": 10,
+      "content_md": "## MCQ: Disk and Storage Management\n\nAnswer using option index (0-3). Example: submit 2.",
+      "tasks": [
+        {
+          "description": "Q1: Which command shows free and used disk space by filesystem?",
+          "expected_output": "1",
+          "validation_type": "mcq",
+          "validation_rule": "[\"du\",\"df\",\"lsblk\",\"stat\"]",
+          "hint": "Submit index 0-3.",
+          "xp_reward": 4,
+          "order_index": 1
+        },
+        {
+          "description": "Q2: Which command summarizes directory size usage?",
+          "expected_output": "2",
+          "validation_type": "mcq",
+          "validation_rule": "[\"df\",\"ls\",\"du\",\"pwd\"]",
+          "hint": "Submit index 0-3.",
+          "xp_reward": 4,
+          "order_index": 2
+        },
+        {
+          "description": "Q3: Which command is used to list block devices?",
+          "expected_output": "0",
+          "validation_type": "mcq",
+          "validation_rule": "[\"lsblk\",\"chmod\",\"rm\",\"tee\"]",
+          "hint": "Submit index 0-3.",
+          "xp_reward": 4,
+          "order_index": 3
+        },
+        {
+          "description": "Q4: Which command creates a compressed tar archive?",
+          "expected_output": "3",
+          "validation_type": "mcq",
+          "validation_rule": "[\"tar -xzf backup.tar.gz\",\"gzip file.txt\",\"zip -r backup.zip dir\",\"tar -czf backup.tar.gz dir\"]",
+          "hint": "Submit index 0-3.",
+          "xp_reward": 4,
+          "order_index": 4
+        },
+        {
+          "description": "Q5: Before deleting large files, what is best practice?",
+          "expected_output": "1",
+          "validation_type": "mcq",
+          "validation_rule": "[\"Delete first, inspect later\",\"Verify path and impact before removal\",\"Always use sudo rm -rf\",\"Reboot system to clear space\"]",
+          "hint": "Submit index 0-3.",
+          "xp_reward": 4,
+          "order_index": 5
+        }
+      ]
+    }
+  ]
+}
