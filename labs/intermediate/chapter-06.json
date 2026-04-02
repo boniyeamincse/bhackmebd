@@ -1,0 +1,293 @@
+{
+  "id": "chapter-06",
+  "title": "Text Processing and Search Lab",
+  "level": "intermediate",
+  "order_index": 6,
+  "xp_reward": 100,
+  "lessons": [
+    {
+      "title": "Learn: Text Processing and Search",
+      "order_index": 1,
+      "xp_reward": 10,
+      "content_md": "# Lab 06: Text Processing and Search\n\nThis lab focuses on finding, filtering, transforming, and counting text from files and command output.\n\n## Learning Objectives\n\n- Use `grep` for pattern matching and filtering\n- Use `cut`, `sort`, `uniq`, `tr`, and `wc` for text processing\n- Combine tools with pipes (`|`) for fast analysis\n- Use `find` + `xargs` patterns for scalable search tasks\n\n## Core Topics\n\n### 1) Pattern Matching with grep\n\n```bash\ngrep 'error' app.log\ngrep -i 'warning' app.log\ngrep -n 'failed' auth.log\ngrep -r 'token' ./project\n```\n\n### 2) Column and Token Processing\n\n```bash\ncut -d':' -f1 /etc/passwd\ntr ' ' '\\n' < text.txt\n```\n\n### 3) Sorting and Deduplication\n\n```bash\nsort names.txt\nsort names.txt | uniq\nsort names.txt | uniq -c\n```\n\n### 4) Counting\n\n```bash\nwc -l file.txt\nwc -w file.txt\nwc -c file.txt\n```\n\n### 5) Search + Pipe Workflow\n\n```bash\ncat app.log | grep ERROR | wc -l\nfind . -name '*.log' | sort\n```\n\nUse these skills to investigate logs and extract useful insights quickly.",
+      "tasks": []
+    },
+    {
+      "title": "Command Practice Part 1 (10 Commands)",
+      "order_index": 2,
+      "xp_reward": 35,
+      "content_md": "## Guided Commands: Part 1\n\nPrepare sample logs and practice filtering.\n\n```bash\ncd ~ && mkdir -p ~/lab6\nprintf 'INFO start\\nERROR failed login\\nWARN retry\\nERROR db timeout\\n' > ~/lab6/app.log\ncat ~/lab6/app.log\ngrep 'ERROR' ~/lab6/app.log\ngrep -i 'warn' ~/lab6/app.log\ngrep -n 'ERROR' ~/lab6/app.log\nwc -l ~/lab6/app.log\nwc -w ~/lab6/app.log\ncat ~/lab6/app.log | grep ERROR | wc -l\ncat ~/lab6/app.log | grep INFO\n```",
+      "tasks": [
+        {
+          "description": "C01: Create lab6 directory in home.",
+          "expected_output": "lab6",
+          "validation_type": "contains",
+          "hint": "Type: cd ~ && mkdir -p ~/lab6 && ls ~",
+          "xp_reward": 2,
+          "order_index": 1
+        },
+        {
+          "description": "C02: Create app.log with INFO, ERROR, WARN lines.",
+          "expected_output": "ERROR db timeout",
+          "validation_type": "contains",
+          "hint": "Type: printf 'INFO start\nERROR failed login\nWARN retry\nERROR db timeout\n' > ~/lab6/app.log && cat ~/lab6/app.log",
+          "xp_reward": 2,
+          "order_index": 2
+        },
+        {
+          "description": "C03: Print full app.log content.",
+          "expected_output": "WARN retry",
+          "validation_type": "contains",
+          "hint": "Type: cat ~/lab6/app.log",
+          "xp_reward": 2,
+          "order_index": 3
+        },
+        {
+          "description": "C04: Filter only ERROR lines from app.log.",
+          "expected_output": "ERROR",
+          "validation_type": "contains",
+          "hint": "Type: grep 'ERROR' ~/lab6/app.log",
+          "xp_reward": 2,
+          "order_index": 4
+        },
+        {
+          "description": "C05: Case-insensitive grep for warn.",
+          "expected_output": "WARN",
+          "validation_type": "contains",
+          "hint": "Type: grep -i 'warn' ~/lab6/app.log",
+          "xp_reward": 2,
+          "order_index": 5
+        },
+        {
+          "description": "C06: Show line numbers for ERROR lines.",
+          "expected_output": "2:",
+          "validation_type": "contains",
+          "hint": "Type: grep -n 'ERROR' ~/lab6/app.log",
+          "xp_reward": 2,
+          "order_index": 6
+        },
+        {
+          "description": "C07: Count number of lines in app.log.",
+          "expected_output": "4",
+          "validation_type": "contains",
+          "hint": "Type: wc -l ~/lab6/app.log",
+          "xp_reward": 2,
+          "order_index": 7
+        },
+        {
+          "description": "C08: Count number of words in app.log.",
+          "expected_output": "10",
+          "validation_type": "contains",
+          "hint": "Type: wc -w ~/lab6/app.log",
+          "xp_reward": 2,
+          "order_index": 8
+        },
+        {
+          "description": "C09: Count ERROR lines using pipe workflow.",
+          "expected_output": "2",
+          "validation_type": "contains",
+          "hint": "Type: cat ~/lab6/app.log | grep ERROR | wc -l",
+          "xp_reward": 2,
+          "order_index": 9
+        },
+        {
+          "description": "C10: Filter INFO line from app.log using pipe.",
+          "expected_output": "INFO",
+          "validation_type": "contains",
+          "hint": "Type: cat ~/lab6/app.log | grep INFO",
+          "xp_reward": 2,
+          "order_index": 10
+        }
+      ]
+    },
+    {
+      "title": "Command Practice Part 2 (10 Commands)",
+      "order_index": 3,
+      "xp_reward": 35,
+      "content_md": "## Guided Commands: Part 2\n\nNow practice cut, sort, uniq, tr, find, and xargs.\n\n```bash\nprintf 'ali\\nrahim\\nali\\nsadia\\nrahim\\n' > ~/lab6/users.txt\ncat ~/lab6/users.txt\nsort ~/lab6/users.txt\nsort ~/lab6/users.txt | uniq\nsort ~/lab6/users.txt | uniq -c\ncut -d':' -f1 /etc/passwd | head -n 8\necho 'alpha beta gamma' | tr ' ' '\\n'\nfind ~/lab6 -name '*.txt'\nfind ~/lab6 -name '*.txt' | xargs wc -l\ngrep -r 'ali' ~/lab6\n```",
+      "tasks": [
+        {
+          "description": "C11: Create users.txt with duplicate names.",
+          "expected_output": "sadia",
+          "validation_type": "contains",
+          "hint": "Type: printf 'ali\nrahim\nali\nsadia\nrahim\n' > ~/lab6/users.txt && cat ~/lab6/users.txt",
+          "xp_reward": 2,
+          "order_index": 1
+        },
+        {
+          "description": "C12: Print users.txt file.",
+          "expected_output": "rahim",
+          "validation_type": "contains",
+          "hint": "Type: cat ~/lab6/users.txt",
+          "xp_reward": 2,
+          "order_index": 2
+        },
+        {
+          "description": "C13: Sort names from users.txt.",
+          "expected_output": "ali",
+          "validation_type": "contains",
+          "hint": "Type: sort ~/lab6/users.txt",
+          "xp_reward": 2,
+          "order_index": 3
+        },
+        {
+          "description": "C14: Show unique sorted names.",
+          "expected_output": "sadia",
+          "validation_type": "contains",
+          "hint": "Type: sort ~/lab6/users.txt | uniq",
+          "xp_reward": 2,
+          "order_index": 4
+        },
+        {
+          "description": "C15: Show unique counts per name.",
+          "expected_output": "2 ali",
+          "validation_type": "contains",
+          "hint": "Type: sort ~/lab6/users.txt | uniq -c",
+          "xp_reward": 2,
+          "order_index": 5
+        },
+        {
+          "description": "C16: Extract first field (usernames) from /etc/passwd.",
+          "expected_output": "root",
+          "validation_type": "contains",
+          "hint": "Type: cut -d':' -f1 /etc/passwd | head -n 8",
+          "xp_reward": 2,
+          "order_index": 6
+        },
+        {
+          "description": "C17: Convert spaces to new lines using tr.",
+          "expected_output": "gamma",
+          "validation_type": "contains",
+          "hint": "Type: echo 'alpha beta gamma' | tr ' ' '\n'",
+          "xp_reward": 2,
+          "order_index": 7
+        },
+        {
+          "description": "C18: Find all txt files under lab6.",
+          "expected_output": "users.txt",
+          "validation_type": "contains",
+          "hint": "Type: find ~/lab6 -name '*.txt'",
+          "xp_reward": 2,
+          "order_index": 8
+        },
+        {
+          "description": "C19: Count lines for all txt files via xargs.",
+          "expected_output": "users.txt",
+          "validation_type": "contains",
+          "hint": "Type: find ~/lab6 -name '*.txt' | xargs wc -l",
+          "xp_reward": 2,
+          "order_index": 9
+        },
+        {
+          "description": "C20: Recursive grep for ali in lab6.",
+          "expected_output": "ali",
+          "validation_type": "contains",
+          "hint": "Type: grep -r 'ali' ~/lab6",
+          "xp_reward": 2,
+          "order_index": 10
+        }
+      ]
+    },
+    {
+      "title": "Exercises (5)",
+      "order_index": 4,
+      "xp_reward": 10,
+      "content_md": "## Practical Exercises\n\nUse your search and text-processing skills to solve all five tasks.\n\n- E1-E2: easy\n- E3-E4: medium\n- E5: medium-hard",
+      "tasks": [
+        {
+          "description": "E1: Create events.log with 5 lines including at least two ERROR entries.",
+          "expected_output": "ERROR",
+          "validation_type": "contains",
+          "hint": "Type: printf 'INFO boot\nERROR auth\nWARN cache\nERROR db\nINFO done\n' > ~/lab6/events.log && cat ~/lab6/events.log",
+          "xp_reward": 6,
+          "order_index": 1
+        },
+        {
+          "description": "E2: Count how many ERROR lines are in events.log.",
+          "expected_output": "2",
+          "validation_type": "contains",
+          "hint": "Type: grep 'ERROR' ~/lab6/events.log | wc -l",
+          "xp_reward": 6,
+          "order_index": 2
+        },
+        {
+          "description": "E3: Show events.log with line numbers for each line.",
+          "expected_output": "1:",
+          "validation_type": "contains",
+          "hint": "Type: grep -n '' ~/lab6/events.log",
+          "xp_reward": 6,
+          "order_index": 3
+        },
+        {
+          "description": "E4: Create names.txt with duplicates and output unique sorted names.",
+          "expected_output": "zara",
+          "validation_type": "contains",
+          "hint": "Type: printf 'zara\nrahim\nzara\n' > ~/lab6/names.txt && sort ~/lab6/names.txt | uniq",
+          "xp_reward": 6,
+          "order_index": 4
+        },
+        {
+          "description": "E5: Find all .log files in lab6 and count total lines across them.",
+          "expected_output": "events.log",
+          "validation_type": "contains",
+          "hint": "Type: find ~/lab6 -name '*.log' | xargs wc -l",
+          "xp_reward": 6,
+          "order_index": 5
+        }
+      ]
+    },
+    {
+      "title": "MCQ Quiz (5)",
+      "order_index": 5,
+      "xp_reward": 10,
+      "content_md": "## MCQ: Text Processing and Search\n\nAnswer using option index (0-3). Example: submit 2.",
+      "tasks": [
+        {
+          "description": "Q1: Which command searches text by pattern?",
+          "expected_output": "0",
+          "validation_type": "mcq",
+          "validation_rule": "[\"grep\",\"cut\",\"sort\",\"uniq\"]",
+          "hint": "Submit index 0-3.",
+          "xp_reward": 4,
+          "order_index": 1
+        },
+        {
+          "description": "Q2: Which command removes adjacent duplicate lines after sorting?",
+          "expected_output": "2",
+          "validation_type": "mcq",
+          "validation_rule": "[\"wc\",\"tr\",\"uniq\",\"head\"]",
+          "hint": "Submit index 0-3.",
+          "xp_reward": 4,
+          "order_index": 2
+        },
+        {
+          "description": "Q3: Which command extracts columns using a delimiter?",
+          "expected_output": "1",
+          "validation_type": "mcq",
+          "validation_rule": "[\"grep\",\"cut\",\"sort\",\"find\"]",
+          "hint": "Submit index 0-3.",
+          "xp_reward": 4,
+          "order_index": 3
+        },
+        {
+          "description": "Q4: In `cat file | grep ERROR`, what does `|` do?",
+          "expected_output": "3",
+          "validation_type": "mcq",
+          "validation_rule": "[\"Deletes file\",\"Sorts output\",\"Creates directory\",\"Passes output to next command\"]",
+          "hint": "Submit index 0-3.",
+          "xp_reward": 4,
+          "order_index": 4
+        },
+        {
+          "description": "Q5: Which command counts lines in a file?",
+          "expected_output": "1",
+          "validation_type": "mcq",
+          "validation_rule": "[\"wc -w\",\"wc -l\",\"grep -n\",\"tail -n\"]",
+          "hint": "Submit index 0-3.",
+          "xp_reward": 4,
+          "order_index": 5
+        }
+      ]
+    }
+  ]
+}
