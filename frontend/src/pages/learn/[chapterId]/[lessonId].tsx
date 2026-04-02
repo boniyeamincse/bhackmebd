@@ -132,57 +132,108 @@ function LearnPage() {
   const completedCount = lesson.tasks.filter((task) => isCompleted(task.id)).length;
 
   return (
-    <div className="min-h-screen bg-gray-950 flex flex-col">
+    <div className="h-screen bg-[#05070a] flex flex-col overflow-hidden">
       <Navbar />
       {toast && (
-        <div className="fixed top-20 right-4 z-40 w-80">
+        <div className="fixed top-20 right-4 z-50 w-80">
           <Alert type={toast.type} message={toast.message} />
         </div>
       )}
-      <Modal open={!!badgeModal} onClose={() => setBadgeModal(null)} title="Badge Earned">
-        <p className="text-terminal-green font-bold">{badgeModal}</p>
+      <Modal open={!!badgeModal} onClose={() => setBadgeModal(null)} title="Achievement Unlocked">
+        <div className="text-center py-4">
+          <div className="w-20 h-20 bg-terminal-green/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-terminal-green/50 shadow-[0_0_20px_rgba(88,214,141,0.2)]">
+             <span className="text-3xl text-terminal-green">🏆</span>
+          </div>
+          <p className="text-white font-black text-xl uppercase italic tracking-tighter mb-1">{badgeModal}</p>
+          <p className="text-gray-500 text-sm font-mono">Rank increased. Special badge added to profile.</p>
+        </div>
       </Modal>
 
       <div ref={splitRef} className="flex flex-1 overflow-hidden">
-        <div style={{ width: `${leftWidth}%` }} className="flex flex-col overflow-y-auto border-r border-gray-800">
-          <div className="px-6 pt-5">
-            <ProgressBar completed={completedCount} total={lesson.tasks.length} />
-          </div>
-          <InstructionPanel lesson={lesson} />
-          {lesson.tasks?.map((task, i) => (
-            <div
-              key={task.id}
-              ref={(el) => {
-                taskRefs.current[i] = el;
-              }}
-            >
-              <TaskCard
-                task={task}
-                index={i}
-                isCompleted={isCompleted(task.id)}
-                onComplete={handleTaskComplete}
-                onToast={(message, type = 'info') => setToast({ message, type })}
-              />
+        {/* Left Side: Instructions and Tasks */}
+        <div 
+          style={{ width: `${leftWidth}%` }} 
+          className="flex flex-col bg-white/[0.02] border-r border-white/5 relative group"
+        >
+          <div className="absolute top-0 right-0 w-32 h-32 bg-terminal-green/5 blur-3xl rounded-full -mr-16 -mt-16 pointer-events-none" />
+          
+          <div className="flex-1 overflow-y-auto custom-scrollbar">
+            <div className="px-6 pt-8 pb-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] font-black text-gray-500 uppercase tracking-[0.3em]">Operational Progress</span>
+                <span className="text-[10px] font-mono text-terminal-green font-bold">{Math.round((completedCount/lesson.tasks.length)*100)}%</span>
+              </div>
+              <ProgressBar completed={completedCount} total={lesson.tasks.length} />
             </div>
-          ))}
 
-          {chapter?.chapter && lessonId && (
-            <ChapterNav
-              chapterId={String(chapterId)}
-              lessons={chapter.chapter.lessons || []}
-              currentLessonId={String(lessonId)}
-            />
-          )}
+            <div className="px-2">
+              <InstructionPanel lesson={lesson} />
+            </div>
+
+            <div className="px-6 pb-20">
+              <h3 className="text-[11px] font-black text-white/40 uppercase tracking-[0.4em] mb-6 flex items-center gap-4">
+                <span>Directives</span>
+                <div className="h-px bg-white/5 flex-1" />
+              </h3>
+              {lesson.tasks?.map((task, i) => (
+                <div
+                  key={task.id}
+                  ref={(el) => {
+                    taskRefs.current[i] = el;
+                  }}
+                  className="mb-6"
+                >
+                  <TaskCard
+                    task={task}
+                    index={i}
+                    isCompleted={isCompleted(task.id)}
+                    onComplete={handleTaskComplete}
+                    onToast={(message, type = 'info') => setToast({ message, type })}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="p-4 bg-black/40 backdrop-blur-md border-t border-white/5">
+            {chapter?.chapter && lessonId && (
+              <ChapterNav
+                chapterId={String(chapterId)}
+                lessons={chapter.chapter.lessons || []}
+                currentLessonId={String(lessonId)}
+              />
+            )}
+          </div>
         </div>
 
+        {/* Resizer */}
         <div
           onMouseDown={() => setDragging(true)}
-          className="w-2 cursor-col-resize bg-gray-900 hover:bg-terminal-green/50 transition"
-          title="Resize panels"
+          className={`w-1 z-10 cursor-col-resize transition-all duration-300 hover:w-2
+            ${dragging ? 'bg-terminal-green' : 'bg-white/5 hover:bg-terminal-green/30'}
+          `}
         />
 
-        <div className="flex-1 min-w-[320px] flex flex-col">
-          <TerminalPanel lessonId={lesson.id} />
+        {/* Right Side: Integrated Terminal */}
+        <div className="flex-1 min-w-[320px] flex flex-col bg-black">
+          <div className="px-4 py-2 bg-white/5 flex items-center justify-between border-b border-white/5">
+            <div className="flex items-center gap-3">
+              <div className="flex gap-1.5">
+                <div className="w-2.5 h-2.5 rounded-full bg-red-500/50" />
+                <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/50" />
+                <div className="w-2.5 h-2.5 rounded-full bg-green-500/50" />
+              </div>
+              <div className="h-4 w-px bg-white/10 mx-1" />
+              <span className="text-[10px] font-mono font-bold text-gray-500 uppercase tracking-widest flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-terminal-green animate-pulse" />
+                Terminal_Session.sh
+              </span>
+            </div>
+            <span className="text-[10px] font-mono text-gray-600">SSH: root@bhackme_vps</span>
+          </div>
+          <div className="flex-1">
+            <TerminalPanel lessonId={lesson.id} />
+          </div>
         </div>
       </div>
     </div>
