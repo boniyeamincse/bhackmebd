@@ -28,7 +28,7 @@ build/
 docker-compose.override.yml
 
 # ── Prisma ─────────────────────────────────────────────
-backend/prisma/migrations/  # Generated; don't commit in early dev
+# Track migration history for deterministic deploys
 
 # ── Logs ───────────────────────────────────────────────
 logs/

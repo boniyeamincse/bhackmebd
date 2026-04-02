@@ -6,8 +6,11 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "test": "jest --forceExit",
-    "seed": "node src/utils/seed.js"
+    "test": "jest --runInBand --forceExit",
+    "seed": "node src/utils/seed.js",
+    "migrate:dev": "prisma migrate dev",
+    "migrate:deploy": "prisma migrate deploy",
+    "prisma:generate": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^5.0.0",
@@ -18,6 +21,7 @@
     "dotenv": "^16.0.0",
     "express": "^4.18.0",
     "express-rate-limit": "^7.0.0",
+    "generic-pool": "^3.9.0",
     "helmet": "^7.0.0",
     "ioredis": "^5.3.0",
     "joi": "^17.9.0",
@@ -27,7 +31,8 @@
     "passport-jwt": "^4.0.0",
     "socket.io": "^4.7.0",
     "uuid": "^9.0.0",
-    "winston": "^3.11.0"
+    "winston": "^3.11.0",
+    "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
     "jest": "^29.0.0",
