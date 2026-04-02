@@ -19,7 +19,14 @@ type Lesson = {
   id: string;
   title: string;
   content_md: string;
-  tasks: Array<{ id: string; description: string; hint?: string; xp_reward: number }>;
+  tasks: Array<{ 
+    id: string; 
+    description: string; 
+    hint?: string; 
+    xp_reward: number; 
+    order_index: number;
+    validation_type: string;
+  }>;
 };
 
 type Chapter = {
@@ -127,6 +134,31 @@ function LearnPage() {
     }
   };
 
+  const phases = useMemo(() => {
+    if (!lesson?.tasks) return [];
+    const practice = lesson.tasks.filter(t => t.order_index < 20);
+    const exercises = lesson.tasks.filter(t => t.order_index >= 20 && t.order_index < 25);
+    const exam = lesson.tasks.filter(t => t.order_index >= 25);
+    
+    return [
+      { id: 'practice', title: 'Phase 1: Command Mastery', tasks: practice, locked: false },
+      { 
+        id: 'exercise', 
+        title: 'Phase 2: Tactical Exercises', 
+        tasks: exercises, 
+        locked: practice.some(t => !isCompleted(t.id)) 
+      },
+      { 
+        id: 'exam', 
+        title: 'Phase 3: Theoretical Exam', 
+        tasks: exam, 
+        locked: exercises.some(t => !isCompleted(t.id)) || practice.some(t => !isCompleted(t.id))
+      }
+    ];
+  }, [lesson?.tasks, isCompleted]);
+
+  const [activePhase, setActivePhase] = useState('practice');
+
   if (!lesson) return <div className="min-h-screen bg-gray-950 flex items-center justify-center text-gray-400">Loading...</div>;
 
   const completedCount = lesson.tasks.filter((task) => isCompleted(task.id)).length;
@@ -160,10 +192,25 @@ function LearnPage() {
           <div className="flex-1 overflow-y-auto custom-scrollbar">
             <div className="px-6 pt-8 pb-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] font-black text-gray-500 uppercase tracking-[0.3em]">Operational Progress</span>
+                <span className="text-[10px] font-black text-gray-500 uppercase tracking-[0.3em]">Overall Progress</span>
                 <span className="text-[10px] font-mono text-terminal-green font-bold">{Math.round((completedCount/lesson.tasks.length)*100)}%</span>
               </div>
               <ProgressBar completed={completedCount} total={lesson.tasks.length} />
+
+              <div className="flex gap-2 mt-6">
+                {phases.map(p => (
+                  <button
+                    key={p.id}
+                    onClick={() => !p.locked && setActivePhase(p.id)}
+                    className={`flex-1 py-2 text-[10px] font-bold uppercase tracking-wider rounded border transition-all
+                      ${activePhase === p.id ? 'bg-terminal-green text-black border-terminal-green' : 'bg-white/5 text-gray-400 border-white/10 hover:border-white/20'}
+                      ${p.locked ? 'opacity-30 cursor-not-allowed' : ''}
+                    `}
+                  >
+                    {p.id}
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div className="px-2">
@@ -171,27 +218,31 @@ function LearnPage() {
             </div>
 
             <div className="px-6 pb-20">
-              <h3 className="text-[11px] font-black text-white/40 uppercase tracking-[0.4em] mb-6 flex items-center gap-4">
-                <span>Directives</span>
-                <div className="h-px bg-white/5 flex-1" />
-              </h3>
-              {lesson.tasks?.map((task, i) => (
+              {phases.find(p => p.id === activePhase)?.tasks.map((task, i) => (
                 <div
                   key={task.id}
                   ref={(el) => {
-                    taskRefs.current[i] = el;
+                    taskRefs.current[task.order_index] = el;
                   }}
                   className="mb-6"
                 >
                   <TaskCard
                     task={task}
-                    index={i}
+                    index={task.order_index}
                     isCompleted={isCompleted(task.id)}
                     onComplete={handleTaskComplete}
                     onToast={(message, type = 'info') => setToast({ message, type })}
                   />
                 </div>
               ))}
+              
+              {phases.find(p => p.id === activePhase)?.locked && (
+                <div className="text-center py-12 px-8 bg-black/40 border border-white/5 rounded-xl">
+                  <span className="text-3xl block mb-2">🔒</span>
+                  <p className="text-white font-bold uppercase tracking-widest text-xs">Section Locked</p>
+                  <p className="text-gray-500 text-[10px] mt-1">Complete the previous phase to unlock these directives.</p>
+                </div>
+              )}
             </div>
           </div>
 

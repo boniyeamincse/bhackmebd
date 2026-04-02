@@ -12,11 +12,18 @@ const initWebSocket = (httpServer) => {
   // JWT auth middleware for socket connections
   io.use((socket, next) => {
     const token = socket.handshake.auth?.token;
-    if (!token) return next(new Error('Authentication required'));
+    logger.info(`Socket handshake attempt. Token present: ${!!token}`);
+    
+    if (!token) {
+      logger.error('Socket authentication failed: Token missing');
+      return next(new Error('Authentication required'));
+    }
     try {
       socket.user = jwt.verify(token, process.env.JWT_SECRET);
+      logger.info(`Socket authenticated for user: ${socket.user.id}`);
       next();
-    } catch {
+    } catch (err) {
+      logger.error(`Socket authentication failed: ${err.message}`);
       next(new Error('Invalid token'));
     }
   });
