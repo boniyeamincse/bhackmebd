@@ -8,8 +8,6 @@ let consumers = 0;
 
 export const useSocket = () => {
   const { token } = useAuthStore();
-  const setConnected = useTerminalStore((s) => s.setConnected);
-  const appendOutput = useTerminalStore((s) => s.appendOutput);
   const [currentSocket, setCurrentSocket] = useState<Socket | null>(socket);
 
   useEffect(() => {
@@ -20,7 +18,7 @@ export const useSocket = () => {
         consumers = 0;
       }
       setCurrentSocket(null);
-      setConnected(false);
+      useTerminalStore.getState().setConnected(false);
       return;
     }
 
@@ -53,10 +51,10 @@ export const useSocket = () => {
         socket.disconnect();
         socket = null;
         setCurrentSocket(null);
-        setConnected(false);
+        useTerminalStore.getState().setConnected(false);
       }
     };
-  }, [token, setConnected, appendOutput]);
+  }, [token]);
 
   return { socket: currentSocket };
 };
