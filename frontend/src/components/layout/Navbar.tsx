@@ -19,6 +19,8 @@ export default function Navbar() {
           <>
             <Link href="/dashboard" className="text-gray-300 hover:text-white text-sm">Dashboard</Link>
             <Link href="/chapters" className="text-gray-300 hover:text-white text-sm">Chapters</Link>
+            <Link href="/leaderboard" className="text-gray-300 hover:text-white text-sm">Leaderboard</Link>
+            <Link href="/profile" className="text-gray-300 hover:text-white text-sm">Profile</Link>
             <span className="text-xs bg-gray-800 text-terminal-green px-2 py-1 rounded font-mono">
               XP {user?.total_xp ?? 0}
             </span>

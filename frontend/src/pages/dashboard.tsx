@@ -5,6 +5,8 @@ import { useAuthStore } from '@/store/auth.store';
 import Navbar from '@/components/layout/Navbar';
 import XPBar from '@/components/gamification/XPBar';
 import LevelBadge from '@/components/gamification/LevelBadge';
+import StreakCalendar from '@/components/gamification/StreakCalendar';
+import Leaderboard from '@/components/gamification/Leaderboard';
 import { withAuth } from '@/components/auth/withAuth';
 
 function Dashboard() {
@@ -49,6 +51,11 @@ function Dashboard() {
             <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">Badges</p>
             <p className="text-2xl font-bold text-white">{stats?.badgeCount ?? user.badges?.length ?? 0}</p>
           </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
+          <StreakCalendar streakDays={stats?.streak ?? 0} />
+          <Leaderboard compact />
         </div>
 
         <div className="flex items-center justify-between mb-4">

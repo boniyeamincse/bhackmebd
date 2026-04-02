@@ -8,6 +8,7 @@
     "dev": "nodemon src/index.js",
     "test": "jest --runInBand --forceExit",
     "seed": "node src/utils/seed.js",
+    "seed:badges": "node src/utils/seed-badges.js",
     "migrate:dev": "prisma migrate dev",
     "migrate:deploy": "prisma migrate deploy",
     "prisma:generate": "prisma generate"

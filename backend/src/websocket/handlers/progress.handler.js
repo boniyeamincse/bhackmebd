@@ -12,7 +12,15 @@ const progressHandler = (io, socket) => {
 
       if (passed) {
         const award = await XpService.award(socket.user.id, task.xp_reward, taskId);
-        socket.emit('task:result', { success: true, xp: task.xp_reward, message: `Correct! +${task.xp_reward} XP` });
+        socket.emit('task:result', {
+          success: true,
+          xp: task.xp_reward,
+          totalXp: award.totalXp,
+          level: award.level,
+          levelUp: award.levelUp,
+          badges: award.badges || [],
+          message: `Correct! +${task.xp_reward} XP`,
+        });
 
         for (const badge of award.badges || []) {
           socket.emit('badge:earned', { badge });

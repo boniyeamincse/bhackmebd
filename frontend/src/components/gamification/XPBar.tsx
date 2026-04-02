@@ -13,13 +13,15 @@ export default function XPBar({ xp }: Props) {
   const current = LEVELS.find((l) => xp >= l.min && xp <= l.max) ?? LEVELS[0];
   const next = LEVELS[LEVELS.indexOf(current) + 1];
   const pct = next ? Math.round(((xp - current.min) / (next.min - current.min)) * 100) : 100;
+  const xpToNext = next ? Math.max(next.min - xp, 0) : 0;
 
   return (
     <div className="mt-1">
       <p className={`text-xs ${current.color} mb-1`}>{xp} XP · {current.label}</p>
       <div className="h-1.5 bg-gray-800 rounded-full w-48">
-        <div className="h-full bg-terminal-green rounded-full transition-all" style={{ width: `${pct}%` }} />
+        <div className="h-full bg-terminal-green rounded-full transition-all duration-700" style={{ width: `${pct}%` }} />
       </div>
+      <p className="text-[11px] text-gray-500 mt-1">{next ? `${xpToNext} XP to ${next.label}` : 'Max level reached'}</p>
     </div>
   );
 }
