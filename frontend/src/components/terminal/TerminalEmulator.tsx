@@ -43,6 +43,7 @@ const TerminalEmulator = ({ lessonId }: Props) => {
       term.loadAddon(new WebLinksAddon());
       term.open(termRef.current);
       fitAddon.fit();
+      term.focus();
 
       term.onData((data: string) => socket.emit('terminal:input', { data }));
       socket.on('terminal:output', handleOutput);

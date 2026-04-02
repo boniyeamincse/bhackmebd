@@ -4,6 +4,7 @@ import { useAuthStore } from '@/store/auth.store';
 import { useTerminalStore } from '@/store/terminal.store';
 
 let socket: Socket | null = null;
+let consumers = 0;
 
 export const useSocket = () => {
   const { token } = useAuthStore();
@@ -11,24 +12,44 @@ export const useSocket = () => {
   const appendOutput = useTerminalStore((s) => s.appendOutput);
 
   useEffect(() => {
-    if (!token || socket?.connected) return;
+    if (!token) {
+      if (socket) {
+        socket.disconnect();
+        socket = null;
+        consumers = 0;
+      }
+      setConnected(false);
+      return;
+    }
 
-    socket = io(process.env.NEXT_PUBLIC_WS_URL || 'http://localhost:4000', {
-      auth: { token },
-      transports: ['websocket'],
-    });
+    consumers += 1;
 
-    socket.on('connect', () => setConnected(true));
-    socket.on('disconnect', () => setConnected(false));
-    socket.on('terminal:output', ({ data }: { data: string }) => appendOutput(data));
+    if (!socket) {
+      socket = io(process.env.NEXT_PUBLIC_WS_URL || 'http://localhost:4000', {
+        auth: { token },
+        transports: ['polling', 'websocket'],
+      });
+
+      socket.on('connect', () => useTerminalStore.getState().setConnected(true));
+      socket.on('disconnect', () => useTerminalStore.getState().setConnected(false));
+      socket.on('terminal:output', ({ data }: { data: string }) =>
+        useTerminalStore.getState().appendOutput(data)
+      );
+    } else {
+      // Keep auth in sync when token rotates.
+      socket.auth = { token };
+    }
 
     return () => {
-      socket?.off('connect');
-      socket?.off('disconnect');
-      socket?.off('terminal:output');
-      setConnected(false);
-      socket?.disconnect();
-      socket = null;
+      consumers = Math.max(0, consumers - 1);
+      if (consumers === 0 && socket) {
+        socket.removeAllListeners('connect');
+        socket.removeAllListeners('disconnect');
+        socket.removeAllListeners('terminal:output');
+        socket.disconnect();
+        socket = null;
+        setConnected(false);
+      }
     };
   }, [token, setConnected, appendOutput]);
 
