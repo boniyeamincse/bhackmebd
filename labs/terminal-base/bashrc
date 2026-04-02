@@ -1,0 +1,31 @@
+# ── B-HackMe Hacker Shell ──────────────────────────────
+# Minimal, safe .bashrc for the isolated terminal container
+
+# Friendly coloured prompt
+PS1='\[\e[32;1m\]hacker\[\e[0m\]@\[\e[36m\]bhackme\[\e[0m\]:\[\e[34m\]\w\[\e[0m\]\$ '
+
+# History settings (in-memory only — root fs is read-only)
+HISTSIZE=500
+HISTFILESIZE=0          # Don't persist history
+HISTCONTROL=ignoredups
+
+# Safer defaults
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+alias ls='ls --color=auto'
+alias ll='ls -la'
+alias grep='grep --color=auto'
+
+# Quick helpers
+alias cls='clear'
+alias ports='ss -tulnp'
+alias myip='ip addr show'
+
+# Welcome banner
+echo ""
+echo "  ╔══════════════════════════════════╗"
+echo "  ║  Welcome to B-HackMe Terminal!   ║"
+echo "  ║  Learn Linux. Think Like Hacker. ║"
+echo "  ╚══════════════════════════════════╝"
+echo ""

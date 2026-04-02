@@ -58,45 +58,45 @@ Todo 🔄 In Progress ✅ Done
   ---------------------------------------------------------------------------------------
   **\#**   **Task Description**                   **Phase**   **Priority**   **Status**
   -------- -------------------------------------- ----------- -------------- ------------
-  **01**   Initialize Git repository and define   Phase 1     🔴 Critical    🔲 Todo
-           branching strategy (main/dev/feature)                             
+  **01**   Initialize Git repository and define   Phase 1     🔴 Critical    ✅ Done
+           branching strategy (main/dev/feature)
 
-  **02**   Create root docker-compose.yml with    Phase 1     🔴 Critical    🔲 Todo
-           all service definitions                                           
+  **02**   Create root docker-compose.yml with    Phase 1     🔴 Critical    ✅ Done
+           all service definitions
 
-  **03**   Write base Dockerfiles for frontend,   Phase 1     🔴 Critical    🔲 Todo
-           backend, and terminal containers                                  
+  **03**   Write base Dockerfiles for frontend,   Phase 1     🔴 Critical    ✅ Done
+           backend, and terminal containers
 
-  **04**   Set up PostgreSQL 16 container with    Phase 1     🔴 Critical    🔲 Todo
-           persistent volume and init.sql                                    
+  **04**   Set up PostgreSQL 16 container with    Phase 1     🔴 Critical    ✅ Done
+           persistent volume and init.sql
 
-  **05**   Set up Redis 7 container with          Phase 1     🔴 Critical    🔲 Todo
-           appendonly persistence and memory                                 
-           limits                                                            
+  **05**   Set up Redis 7 container with          Phase 1     🔴 Critical    ✅ Done
+           appendonly persistence and memory
+           limits
 
-  **06**   Configure Nginx reverse proxy with     Phase 1     🔴 Critical    🔲 Todo
-           upstream routing for API, WS, and                                 
-           frontend                                                          
+  **06**   Configure Nginx reverse proxy with     Phase 1     🔴 Critical    ✅ Done
+           upstream routing for API, WS, and
+           frontend
 
-  **07**   Create .env.example with all required  Phase 1     🟡 High        🔲 Todo
-           environment variable keys documented                              
+  **07**   Create .env.example with all required  Phase 1     🟡 High        ✅ Done
+           environment variable keys documented
 
-  **08**   Build Alpine Linux terminal base image Phase 1     🔴 Critical    🔲 Todo
-           with security hardening                                           
+  **08**   Build Alpine Linux terminal base image Phase 1     🔴 Critical    ✅ Done
+           with security hardening
 
-  **09**   Configure isolated Docker bridge       Phase 1     🔴 Critical    🔲 Todo
-           network (terminal-net, no internet                                
-           access)                                                           
+  **09**   Configure isolated Docker bridge       Phase 1     🔴 Critical    ✅ Done
+           network (terminal-net, no internet
+           access)
 
-  **10**   Set up GitHub Actions CI pipeline      Phase 1     🟡 High        🔲 Todo
-           (lint → test → build → push)                                      
+  **10**   Set up GitHub Actions CI pipeline      Phase 1     🟡 High        ✅ Done
+           (lint → test → build → push)
 
-  **11**   Configure Certbot for automatic        Phase 1     🟡 High        🔲 Todo
-           SSL/TLS with Nginx on production VPS                              
+  **11**   Configure Certbot for automatic        Phase 1     🟡 High        ✅ Done
+           SSL/TLS with Nginx on production VPS
 
-  **12**   Write docker-compose.dev.yml with      Phase 1     🟡 High        🔲 Todo
-           hot-reload settings for local                                     
-           development                                                       
+  **12**   Write docker-compose.dev.yml with      Phase 1     🟡 High        ✅ Done
+           hot-reload settings for local
+           development
   ---------------------------------------------------------------------------------------
 
 **Phase 2 --- Database & Backend Foundation**
