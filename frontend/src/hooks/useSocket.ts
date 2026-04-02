@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { useAuthStore } from '@/store/auth.store';
 import { useTerminalStore } from '@/store/terminal.store';
@@ -10,6 +10,7 @@ export const useSocket = () => {
   const { token } = useAuthStore();
   const setConnected = useTerminalStore((s) => s.setConnected);
   const appendOutput = useTerminalStore((s) => s.appendOutput);
+  const [currentSocket, setCurrentSocket] = useState<Socket | null>(socket);
 
   useEffect(() => {
     if (!token) {
@@ -18,6 +19,7 @@ export const useSocket = () => {
         socket = null;
         consumers = 0;
       }
+      setCurrentSocket(null);
       setConnected(false);
       return;
     }
@@ -35,9 +37,11 @@ export const useSocket = () => {
       socket.on('terminal:output', ({ data }: { data: string }) =>
         useTerminalStore.getState().appendOutput(data)
       );
+      setCurrentSocket(socket);
     } else {
       // Keep auth in sync when token rotates.
       socket.auth = { token };
+      setCurrentSocket(socket);
     }
 
     return () => {
@@ -48,10 +52,11 @@ export const useSocket = () => {
         socket.removeAllListeners('terminal:output');
         socket.disconnect();
         socket = null;
+        setCurrentSocket(null);
         setConnected(false);
       }
     };
   }, [token, setConnected, appendOutput]);
 
-  return { socket };
+  return { socket: currentSocket };
 };
