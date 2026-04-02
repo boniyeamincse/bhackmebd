@@ -3,11 +3,29 @@ const { AppError } = require('../../utils/errors');
 
 const listChapters = async (req, res, next) => {
   try {
-    const chapters = await prisma.chapters.findMany({
-      where: { is_published: true },
-      orderBy: { order_index: 'asc' },
+    const page = Math.max(parseInt(req.query.page || '1', 10), 1);
+    const limit = Math.min(Math.max(parseInt(req.query.limit || '20', 10), 1), 100);
+    const skip = (page - 1) * limit;
+
+    const [chapters, total] = await Promise.all([
+      prisma.chapters.findMany({
+        where: { is_published: true },
+        orderBy: { order_index: 'asc' },
+        skip,
+        take: limit,
+      }),
+      prisma.chapters.count({ where: { is_published: true } }),
+    ]);
+
+    res.json({
+      chapters,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.max(Math.ceil(total / limit), 1),
+      },
     });
-    res.json({ chapters });
   } catch (err) {
     next(err);
   }
@@ -15,7 +33,22 @@ const listChapters = async (req, res, next) => {
 
 const getChapter = async (req, res, next) => {
   try {
-    const chapter = await prisma.chapters.findUnique({ where: { id: req.params.id } });
+    const chapter = await prisma.chapters.findUnique({
+      where: { id: req.params.id },
+      include: {
+        lessons: {
+          where: { is_published: true },
+          orderBy: { order_index: 'asc' },
+          select: {
+            id: true,
+            title: true,
+            title_bn: true,
+            order_index: true,
+            xp_reward: true,
+          },
+        },
+      },
+    });
     if (!chapter) throw new AppError('Chapter not found', 404);
     res.json({ chapter });
   } catch (err) {

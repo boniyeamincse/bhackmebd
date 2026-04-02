@@ -9,6 +9,7 @@ const chapterRoutes = require('./api/routes/chapter.routes');
 const lessonRoutes = require('./api/routes/lesson.routes');
 const terminalRoutes = require('./api/routes/terminal.routes');
 const progressRoutes = require('./api/routes/progress.routes');
+const leaderboardRoutes = require('./api/routes/leaderboard.routes');
 const adminRoutes = require('./api/routes/admin.routes');
 
 const app = express();
@@ -23,6 +24,7 @@ app.use('/api/chapters', chapterRoutes);
 app.use('/api/lessons', lessonRoutes);
 app.use('/api/terminal', terminalRoutes);
 app.use('/api/progress', progressRoutes);
+app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/admin', adminRoutes);
 
 app.use(errorMiddleware);

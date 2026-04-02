@@ -7,14 +7,14 @@
 ## 📊 Progress Dashboard
 
 **Overall Completion:** 
-`[████████░░░░░░░░░░░░░]` **42%** (42/100 Tasks Completed)
+`[███████████░░░░░░░░░░]` **55%** (55/100 Tasks Completed)
 
 | Phase | Description | Tasks | Est. Days | Status |
 | :--- | :--- | :--- | :--- | :--- |
 | **Phase 1** | Project Setup & Infrastructure | 12/12 | 6 days | ✅ Done |
 | **Phase 2** | Database & Backend Foundation | 16/16 | 8 days | ✅ Done |
 | **Phase 3** | Docker Terminal Engine | 14/14 | 7 days | ✅ Done |
-| **Phase 4** | Learning Content API | 0/13 | 7 days | 🔲 Todo |
+| **Phase 4** | Learning Content API | 13/13 | 7 days | ✅ Done |
 | **Phase 5** | Frontend Foundation | 0/13 | 7 days | 🔲 Todo |
 | **Phase 6** | Terminal UI & Learn Page | 0/11 | 6 days | 🔲 Todo |
 | **Phase 7** | Gamification & User Profile | 0/8 | 4 days | 🔲 Todo |
@@ -79,19 +79,19 @@
 ---
 
 ## 📚 Phase 4: Learning Content API
-- [ ] **43** Build `GET /api/chapters` endpoint (list all published chapters, paginated) 🔴
-- [ ] **44** Build `GET /api/chapters/:id` (single chapter with lesson list) 🔴
-- [ ] **45** Build `GET /api/chapters/:id/lessons` (ordered lesson list for a chapter) 🔴
-- [ ] **46** Build `GET /api/lessons/:id` (lesson with full markdown content + tasks) 🔴
-- [ ] **47** Build task validation service: exact, contains, regex, custom modes 🔴
-- [ ] **48** Build `POST /api/progress/validate`: check output, award XP, update DB 🔴
-- [ ] **49** Build XP service: calculate level from total XP, trigger level-up events 🔴
-- [ ] **50** Build badge service: check criteria after each task completion, unlock badges 🟡
-- [ ] **51** Build `GET /api/progress` endpoint (full chapter/lesson/task progress map) 🟡
-- [ ] **52** Build `GET /api/progress/stats` (XP, level, badge count, streak) 🟡
-- [ ] **53** Build `GET /api/leaderboard` (top 50 users by XP with pagination) 🟢
-- [ ] **54** Implement daily login streak tracking in Redis (key: `streak:{userId}`) 🟢
-- [ ] **55** Write integration tests for progress and validation endpoints 🟡
+- [x] **43** Build `GET /api/chapters` endpoint (list all published chapters, paginated) 🔴
+- [x] **44** Build `GET /api/chapters/:id` (single chapter with lesson list) 🔴
+- [x] **45** Build `GET /api/chapters/:id/lessons` (ordered lesson list for a chapter) 🔴
+- [x] **46** Build `GET /api/lessons/:id` (lesson with full markdown content + tasks) 🔴
+- [x] **47** Build task validation service: exact, contains, regex, custom modes 🔴
+- [x] **48** Build `POST /api/progress/validate`: check output, award XP, update DB 🔴
+- [x] **49** Build XP service: calculate level from total XP, trigger level-up events 🔴
+- [x] **50** Build badge service: check criteria after each task completion, unlock badges 🟡
+- [x] **51** Build `GET /api/progress` endpoint (full chapter/lesson/task progress map) 🟡
+- [x] **52** Build `GET /api/progress/stats` (XP, level, badge count, streak) 🟡
+- [x] **53** Build `GET /api/leaderboard` (top 50 users by XP with pagination) 🟢
+- [x] **54** Implement daily login streak tracking in Redis (key: `streak:{userId}`) 🟢
+- [x] **55** Write integration tests for progress and validation endpoints 🟡
 
 ---
 

@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const prisma = require('../../config/database');
 const redis = require('../../config/redis');
 const { AppError } = require('../../utils/errors');
+const StreakService = require('../../services/streak.service');
 
 const signToken = (payload, secret, expiresIn) =>
   jwt.sign(payload, secret, { expiresIn });
@@ -40,10 +41,12 @@ const login = async (req, res, next) => {
     const refreshToken = signToken({ id: user.id }, process.env.REFRESH_TOKEN_SECRET, process.env.REFRESH_TOKEN_EXPIRES_IN || '7d');
 
     await redis.setex(`refresh:${user.id}`, 7 * 24 * 3600, refreshToken);
+    const streak = await StreakService.markDailyLogin(user.id);
 
     res.json({
       accessToken,
       refreshToken,
+      streak,
       user: { id: user.id, username: user.username, email: user.email, role: user.role },
     });
   } catch (err) {

@@ -22,11 +22,22 @@ const award = async (userId, xp, taskId) => {
   });
 
   const newLevel = LEVELS.find((l) => user.total_xp >= l.min && user.total_xp <= l.max)?.label;
+  let level = user.level;
+  let levelUp = false;
   if (newLevel && newLevel !== user.level) {
     await prisma.users.update({ where: { id: userId }, data: { level: newLevel } });
+    level = newLevel;
+    levelUp = true;
   }
 
-  await BadgeService.checkAndAward(userId, user.total_xp);
+  const badges = await BadgeService.checkAndAward(userId, user.total_xp);
+
+  return {
+    totalXp: user.total_xp,
+    level,
+    levelUp,
+    badges,
+  };
 };
 
 module.exports = { award };

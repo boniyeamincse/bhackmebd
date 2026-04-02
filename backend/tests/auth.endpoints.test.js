@@ -12,8 +12,9 @@ jest.mock('../src/config/database', () => ({
 
 jest.mock('../src/config/redis', () => ({
   setex: jest.fn(),
+  set: jest.fn(),
   del: jest.fn(),
-  get: jest.fn(),
+  get: jest.fn().mockResolvedValue(null),
   on: jest.fn(),
 }));
 
