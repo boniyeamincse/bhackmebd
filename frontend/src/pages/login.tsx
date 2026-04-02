@@ -16,7 +16,7 @@ export default function Login() {
     setError('');
     try {
       const { data } = await api.post('/auth/login', { email, password });
-      setAuth(data.user, data.accessToken);
+      setAuth(data.user, data.accessToken, data.refreshToken || null);
       router.push('/dashboard');
     } catch (err: any) {
       setError(err.response?.data?.error || 'Login failed');

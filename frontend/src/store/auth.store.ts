@@ -14,7 +14,10 @@ interface User {
 interface AuthState {
   user: User | null;
   token: string | null;
-  setAuth: (user: User, token: string) => void;
+  refreshToken: string | null;
+  setAuth: (user: User, token: string, refreshToken?: string | null) => void;
+  setToken: (token: string) => void;
+  setRefreshToken: (refreshToken: string | null) => void;
   clearAuth: () => void;
 }
 
@@ -23,8 +26,11 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       user: null,
       token: null,
-      setAuth: (user, token) => set({ user, token }),
-      clearAuth: () => set({ user: null, token: null }),
+      refreshToken: null,
+      setAuth: (user, token, refreshToken = null) => set({ user, token, refreshToken }),
+      setToken: (token) => set({ token }),
+      setRefreshToken: (refreshToken) => set({ refreshToken }),
+      clearAuth: () => set({ user: null, token: null, refreshToken: null }),
     }),
     { name: 'bhackme-auth' }
   )

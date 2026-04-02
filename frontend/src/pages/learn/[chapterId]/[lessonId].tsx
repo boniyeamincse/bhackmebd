@@ -1,4 +1,3 @@
-import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
 import api from '@/lib/api';
@@ -7,15 +6,12 @@ import Navbar from '@/components/layout/Navbar';
 import InstructionPanel from '@/components/learn/InstructionPanel';
 import TerminalPanel from '@/components/learn/TerminalPanel';
 import TaskCard from '@/components/learn/TaskCard';
+import { withAuth } from '@/components/auth/withAuth';
 
-export default function LearnPage() {
+function LearnPage() {
   const router = useRouter();
-  const { chapterId, lessonId } = router.query;
+  const { lessonId } = router.query;
   const { token } = useAuthStore();
-
-  useEffect(() => {
-    if (!token) router.push('/login');
-  }, [token, router]);
 
   const { data: lesson } = useQuery({
     queryKey: ['lesson', lessonId],
@@ -42,3 +38,5 @@ export default function LearnPage() {
     </div>
   );
 }
+
+export default withAuth(LearnPage);

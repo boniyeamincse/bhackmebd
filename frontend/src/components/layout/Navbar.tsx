@@ -18,6 +18,13 @@ export default function Navbar() {
         {token ? (
           <>
             <Link href="/dashboard" className="text-gray-300 hover:text-white text-sm">Dashboard</Link>
+            <Link href="/chapters" className="text-gray-300 hover:text-white text-sm">Chapters</Link>
+            <span className="text-xs bg-gray-800 text-terminal-green px-2 py-1 rounded font-mono">
+              XP {user?.total_xp ?? 0}
+            </span>
+            <span className="text-xs bg-gray-800 text-gray-300 px-2 py-1 rounded capitalize">
+              {user?.level ?? 'beginner'}
+            </span>
             <span className="text-gray-500 text-sm">{user?.username}</span>
             <button onClick={handleLogout} className="text-red-400 hover:text-red-300 text-sm">Logout</button>
           </>
