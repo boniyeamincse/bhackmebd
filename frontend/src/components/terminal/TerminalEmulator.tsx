@@ -43,9 +43,12 @@ const TerminalEmulator = ({ lessonId }: Props) => {
       term.loadAddon(new WebLinksAddon());
       term.open(termRef.current);
       fitAddon.fit();
+      term.focus();
+      term.writeln('\u001b[90m[connecting terminal session...]\u001b[0m');
 
       term.onData((data: string) => socket.emit('terminal:input', { data }));
       socket.on('terminal:output', handleOutput);
+      socket.on('terminal:error', handleError);
       socket.emit('terminal:connect', { lessonId });
       startSession(lessonId);
       setConnected(true);
@@ -62,11 +65,16 @@ const TerminalEmulator = ({ lessonId }: Props) => {
       if (term) term.write(data);
     };
 
+    const handleError = ({ message }: { message: string }) => {
+      if (term) term.writeln(`\r\n\u001b[31m[terminal error] ${message}\u001b[0m\r\n`);
+    };
+
     setup();
 
     return () => {
       isDisposed = true;
       socket.off('terminal:output', handleOutput);
+      socket.off('terminal:error', handleError);
       socket.emit('terminal:disconnect', {});
       setConnected(false);
       if (term) term.dispose();

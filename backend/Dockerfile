@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y \
     make \
     g++ \
     openssl \
+    docker.io \
     && rm -rf /var/lib/apt/lists/*
 
 COPY package*.json ./

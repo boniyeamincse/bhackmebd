@@ -14,10 +14,11 @@ const adminRoutes = require('./api/routes/admin.routes');
 
 const app = express();
 
-app.use(helmet());
+app.use(helmet({ crossOriginResourcePolicy: false })); // Allow cross-origin images
 app.use(cors({ origin: process.env.APP_URL, credentials: true }));
-app.use(express.json());
+app.use(express.json({ limit: '5mb' }));
 app.use(rateLimitMiddleware);
+app.use('/uploads', express.static('uploads'));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/chapters', chapterRoutes);

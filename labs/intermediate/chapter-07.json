@@ -1,0 +1,293 @@
+{
+  "id": "chapter-07",
+  "title": "Process and Service Management Lab",
+  "level": "intermediate",
+  "order_index": 7,
+  "xp_reward": 100,
+  "lessons": [
+    {
+      "title": "Learn: Process and Service Management",
+      "order_index": 1,
+      "xp_reward": 10,
+      "content_md": "# Lab 07: Process and Service Management\n\nProcesses are running programs. Service management means understanding long-running background programs and controlling their lifecycle safely.\n\n## Learning Objectives\n\n- Inspect running processes with `ps`, `top`, and `pgrep`\n- Start background jobs and track their PIDs\n- Stop processes using `kill` and `pkill`\n- Inspect listening services with `ss`\n- Read system state quickly (`uptime`, `free`)\n\n## Core Topics\n\n### 1) Process Inspection\n\n```bash\nps aux\nps -ef\npgrep -f nginx\n```\n\n### 2) Real-Time Monitoring\n\n```bash\ntop -b -n 1 | head -n 10\n```\n\n### 3) Process Control\n\n```bash\nsleep 300 &\nkill <pid>\npkill -f 'sleep 300'\n```\n\n### 4) Service and Port Visibility\n\n```bash\nss -lnt\nss -lntp\n```\n\n### 5) Safety Rules\n\n- Always identify process correctly before killing it\n- Prefer graceful terminate first (`kill`) before force kill (`kill -9`)\n- Avoid killing unknown root/system processes\n\nAfter Learn, complete command practice, then exercises, then MCQ.",
+      "tasks": []
+    },
+    {
+      "title": "Command Practice Part 1 (10 Commands)",
+      "order_index": 2,
+      "xp_reward": 35,
+      "content_md": "## Guided Commands: Part 1\n\nPractice process inspection and basic controls.\n\n```bash\ncd ~ && mkdir -p ~/lab7\nps aux | head -n 10\nps -ef | head -n 10\ntop -b -n 1 | head -n 8\npgrep -f bash\nsleep 300 & echo PROCESS_STARTED\nps -ef | grep '[s]leep 300'\npgrep -f 'sleep 300' | head -n 1\nkill $(pgrep -f 'sleep 300' | head -n 1) && echo PROCESS_STOPPED\npgrep -f 'sleep 300' || echo NOT_RUNNING\n```",
+      "tasks": [
+        {
+          "description": "C01: Create lab7 directory in home.",
+          "expected_output": "lab7",
+          "validation_type": "contains",
+          "hint": "Type: cd ~ && mkdir -p ~/lab7 && ls ~",
+          "xp_reward": 2,
+          "order_index": 1
+        },
+        {
+          "description": "C02: Show first lines of ps aux output.",
+          "expected_output": "USER",
+          "validation_type": "contains",
+          "hint": "Type: ps aux | head -n 10",
+          "xp_reward": 2,
+          "order_index": 2
+        },
+        {
+          "description": "C03: Show first lines of ps -ef output.",
+          "expected_output": "PID",
+          "validation_type": "contains",
+          "hint": "Type: ps -ef | head -n 10",
+          "xp_reward": 2,
+          "order_index": 3
+        },
+        {
+          "description": "C04: Capture one snapshot using top batch mode.",
+          "expected_output": "top -",
+          "validation_type": "contains",
+          "hint": "Type: top -b -n 1 | head -n 8",
+          "xp_reward": 2,
+          "order_index": 4
+        },
+        {
+          "description": "C05: Search for bash process IDs.",
+          "expected_output": "BASH_FOUND",
+          "validation_type": "contains",
+          "hint": "Type: pgrep -f bash >/dev/null && echo BASH_FOUND",
+          "xp_reward": 2,
+          "order_index": 5
+        },
+        {
+          "description": "C06: Start sleep process in background and confirm marker.",
+          "expected_output": "PROCESS_STARTED",
+          "validation_type": "contains",
+          "hint": "Type: sleep 300 & echo PROCESS_STARTED",
+          "xp_reward": 2,
+          "order_index": 6
+        },
+        {
+          "description": "C07: Verify sleep 300 appears in process list.",
+          "expected_output": "sleep 300",
+          "validation_type": "contains",
+          "hint": "Type: ps -ef | grep '[s]leep 300'",
+          "xp_reward": 2,
+          "order_index": 7
+        },
+        {
+          "description": "C08: Print PID of sleep 300 process.",
+          "expected_output": "SLEEP_PID_FOUND",
+          "validation_type": "contains",
+          "hint": "Type: pgrep -f 'sleep 300' | head -n 1 >/dev/null && echo SLEEP_PID_FOUND",
+          "xp_reward": 2,
+          "order_index": 8
+        },
+        {
+          "description": "C09: Stop one sleep 300 process and confirm stop marker.",
+          "expected_output": "PROCESS_STOPPED",
+          "validation_type": "contains",
+          "hint": "Type: kill $(pgrep -f 'sleep 300' | head -n 1) && echo PROCESS_STOPPED",
+          "xp_reward": 2,
+          "order_index": 9
+        },
+        {
+          "description": "C10: Confirm sleep 300 is not running.",
+          "expected_output": "NOT_RUNNING",
+          "validation_type": "contains",
+          "hint": "Type: pgrep -f 'sleep 300' || echo NOT_RUNNING",
+          "xp_reward": 2,
+          "order_index": 10
+        }
+      ]
+    },
+    {
+      "title": "Command Practice Part 2 (10 Commands)",
+      "order_index": 3,
+      "xp_reward": 35,
+      "content_md": "## Guided Commands: Part 2\n\nPractice service visibility, resource checks, and force-stop patterns.\n\n```bash\nuptime\nfree -m\nss -lnt\nss -lntp | head -n 12\nps -eo pid,comm,%cpu,%mem --sort=-%cpu | head -n 10\nps -eo pid,comm,%mem --sort=-%mem | head -n 10\nsleep 400 & echo SECOND_PROCESS_STARTED\npkill -f 'sleep 400' && echo SECOND_PROCESS_STOPPED\npgrep -f 'sleep 400' || echo SECOND_NOT_RUNNING\nps -ef | grep '[b]ash' | head -n 5\n```",
+      "tasks": [
+        {
+          "description": "C11: Show system uptime and load.",
+          "expected_output": "load average",
+          "validation_type": "contains",
+          "hint": "Type: uptime",
+          "xp_reward": 2,
+          "order_index": 1
+        },
+        {
+          "description": "C12: Show memory summary in MB.",
+          "expected_output": "Mem:",
+          "validation_type": "contains",
+          "hint": "Type: free -m",
+          "xp_reward": 2,
+          "order_index": 2
+        },
+        {
+          "description": "C13: List listening TCP ports.",
+          "expected_output": "LISTEN",
+          "validation_type": "contains",
+          "hint": "Type: ss -lnt",
+          "xp_reward": 2,
+          "order_index": 3
+        },
+        {
+          "description": "C14: List listening TCP ports with process info preview.",
+          "expected_output": "LISTEN",
+          "validation_type": "contains",
+          "hint": "Type: ss -lntp | head -n 12",
+          "xp_reward": 2,
+          "order_index": 4
+        },
+        {
+          "description": "C15: Show top CPU-consuming processes.",
+          "expected_output": "PID",
+          "validation_type": "contains",
+          "hint": "Type: ps -eo pid,comm,%cpu,%mem --sort=-%cpu | head -n 10",
+          "xp_reward": 2,
+          "order_index": 5
+        },
+        {
+          "description": "C16: Show top memory-consuming processes.",
+          "expected_output": "PID",
+          "validation_type": "contains",
+          "hint": "Type: ps -eo pid,comm,%mem --sort=-%mem | head -n 10",
+          "xp_reward": 2,
+          "order_index": 6
+        },
+        {
+          "description": "C17: Start another background sleep process.",
+          "expected_output": "SECOND_PROCESS_STARTED",
+          "validation_type": "contains",
+          "hint": "Type: sleep 400 & echo SECOND_PROCESS_STARTED",
+          "xp_reward": 2,
+          "order_index": 7
+        },
+        {
+          "description": "C18: Stop sleep 400 using pkill.",
+          "expected_output": "SECOND_PROCESS_STOPPED",
+          "validation_type": "contains",
+          "hint": "Type: pkill -f 'sleep 400' && echo SECOND_PROCESS_STOPPED",
+          "xp_reward": 2,
+          "order_index": 8
+        },
+        {
+          "description": "C19: Confirm sleep 400 process is gone.",
+          "expected_output": "SECOND_NOT_RUNNING",
+          "validation_type": "contains",
+          "hint": "Type: pgrep -f 'sleep 400' || echo SECOND_NOT_RUNNING",
+          "xp_reward": 2,
+          "order_index": 9
+        },
+        {
+          "description": "C20: Show bash-related processes with ps + grep.",
+          "expected_output": "bash",
+          "validation_type": "contains",
+          "hint": "Type: ps -ef | grep '[b]ash' | head -n 5",
+          "xp_reward": 2,
+          "order_index": 10
+        }
+      ]
+    },
+    {
+      "title": "Exercises (5)",
+      "order_index": 4,
+      "xp_reward": 10,
+      "content_md": "## Practical Exercises\n\nComplete all exercises to prove process and service control skills.\n\n- E1-E2: easy\n- E3-E4: medium\n- E5: medium-hard",
+      "tasks": [
+        {
+          "description": "E1: Start sleep 500 in background and confirm with ps grep.",
+          "expected_output": "sleep 500",
+          "validation_type": "contains",
+          "hint": "Type: sleep 500 & ps -ef | grep '[s]leep 500'",
+          "xp_reward": 6,
+          "order_index": 1
+        },
+        {
+          "description": "E2: Show PID list of sleep 500 using pgrep.",
+          "expected_output": "PID_500_FOUND",
+          "validation_type": "contains",
+          "hint": "Type: pgrep -f 'sleep 500' >/dev/null && echo PID_500_FOUND",
+          "xp_reward": 6,
+          "order_index": 2
+        },
+        {
+          "description": "E3: Stop sleep 500 using pkill and print marker KILLED_500.",
+          "expected_output": "KILLED_500",
+          "validation_type": "contains",
+          "hint": "Type: pkill -f 'sleep 500' && echo KILLED_500",
+          "xp_reward": 6,
+          "order_index": 3
+        },
+        {
+          "description": "E4: Verify no sleep 500 remains running.",
+          "expected_output": "CLEAN_500",
+          "validation_type": "contains",
+          "hint": "Type: pgrep -f 'sleep 500' || echo CLEAN_500",
+          "xp_reward": 6,
+          "order_index": 4
+        },
+        {
+          "description": "E5: Show listening ports and include only LISTEN lines using grep.",
+          "expected_output": "LISTEN",
+          "validation_type": "contains",
+          "hint": "Type: ss -lnt | grep LISTEN",
+          "xp_reward": 6,
+          "order_index": 5
+        }
+      ]
+    },
+    {
+      "title": "MCQ Quiz (5)",
+      "order_index": 5,
+      "xp_reward": 10,
+      "content_md": "## MCQ: Process and Service Management\n\nAnswer using option index (0-3). Example: submit 2.",
+      "tasks": [
+        {
+          "description": "Q1: Which command finds process IDs by name pattern?",
+          "expected_output": "2",
+          "validation_type": "mcq",
+          "validation_rule": "[\"ps\",\"top\",\"pgrep\",\"uptime\"]",
+          "hint": "Submit index 0-3.",
+          "xp_reward": 4,
+          "order_index": 1
+        },
+        {
+          "description": "Q2: Which command sends a signal to a process by PID?",
+          "expected_output": "1",
+          "validation_type": "mcq",
+          "validation_rule": "[\"pkill\",\"kill\",\"ss\",\"grep\"]",
+          "hint": "Submit index 0-3.",
+          "xp_reward": 4,
+          "order_index": 2
+        },
+        {
+          "description": "Q3: Which command can show real-time process activity?",
+          "expected_output": "0",
+          "validation_type": "mcq",
+          "validation_rule": "[\"top\",\"wc\",\"cut\",\"uniq\"]",
+          "hint": "Submit index 0-3.",
+          "xp_reward": 4,
+          "order_index": 3
+        },
+        {
+          "description": "Q4: Which command lists listening TCP sockets?",
+          "expected_output": "3",
+          "validation_type": "mcq",
+          "validation_rule": "[\"ps -ef\",\"free -m\",\"id\",\"ss -lnt\"]",
+          "hint": "Submit index 0-3.",
+          "xp_reward": 4,
+          "order_index": 4
+        },
+        {
+          "description": "Q5: Best safe practice before killing a process is to:",
+          "expected_output": "2",
+          "validation_type": "mcq",
+          "validation_rule": "[\"Use kill -9 always\",\"Reboot system first\",\"Confirm PID and command with ps\",\"Delete /proc entry manually\"]",
+          "hint": "Submit index 0-3.",
+          "xp_reward": 4,
+          "order_index": 5
+        }
+      ]
+    }
+  ]
+}

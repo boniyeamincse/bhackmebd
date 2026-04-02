@@ -22,22 +22,38 @@ interface Props {
 
 export default function BadgeGallery({ earned }: Props) {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
       {BADGE_META.map((badge) => {
         const unlocked = earned.includes(badge.name);
         return (
           <div
             key={badge.name}
-            title={badge.description}
-            className={`rounded-xl border p-3 transition ${
+            className={`group relative rounded-2xl border p-5 transition-all duration-500 overflow-hidden cursor-help ${
               unlocked
-                ? 'border-terminal-green bg-green-950/20 text-terminal-green'
-                : 'border-gray-800 bg-gray-900 text-gray-500'
-            }`}
+                ? 'border-terminal-green/30 bg-terminal-green/5 ring-1 ring-terminal-green/10'
+                : 'border-white/5 bg-white/[0.02] grayscale opacity-40 hover:opacity-60'
+            } hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(34,197,94,0.1)]`}
           >
-            <div className="text-2xl mb-2">{badge.icon}</div>
-            <p className="text-sm font-semibold">{badge.name}</p>
-            <p className="text-xs mt-1">{unlocked ? badge.description : 'Locked'}</p>
+            {unlocked && (
+              <div className="absolute top-0 right-0 p-2">
+                 <div className="w-2 h-2 rounded-full bg-terminal-green animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.8)]"></div>
+              </div>
+            )}
+            
+            <div className="relative z-10">
+              <div className={`text-4xl mb-4 transition-transform duration-500 group-hover:scale-110 drop-shadow-lg ${unlocked ? '' : 'filter blur-[1px]'}`}>
+                {badge.icon}
+              </div>
+              <p className={`text-xs font-black uppercase tracking-widest mb-1 ${unlocked ? 'text-white' : 'text-gray-500'}`}>
+                {badge.name}
+              </p>
+              <p className="text-[9px] text-gray-500 font-mono leading-relaxed line-clamp-2 uppercase">
+                {unlocked ? badge.description : 'Locked Record'}
+              </p>
+            </div>
+
+            {/* Background design element */}
+            <div className="absolute -bottom-4 -right-4 w-12 h-12 border border-white/5 rounded-full opacity-10 group-hover:scale-150 transition-transform"></div>
           </div>
         );
       })}

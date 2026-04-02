@@ -9,7 +9,7 @@ const createSession = async (userId, cols = 80, rows = 24) => {
 
   const container = await DockerService.getOrCreateContainer(userId);
 
-  const ptyProcess = pty.spawn('docker', ['exec', '-it', container.id, '/bin/bash'], {
+  const ptyProcess = pty.spawn('docker', ['exec', '-u', 'hacker', '-it', container.id, '/bin/bash', '--login'], {
     name: 'xterm-256color',
     cols,
     rows,

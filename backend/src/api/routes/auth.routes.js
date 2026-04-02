@@ -25,6 +25,8 @@ router.post('/forgot-password', validate(forgotPasswordSchema), forgotPassword);
 router.post('/reset-password', validate(resetPasswordSchema), resetPassword);
 router.post('/logout', authenticate, logout);
 router.get('/me', authenticate, me);
+router.put('/profile', authenticate, require('../controllers/auth.controller').updateProfile);
+router.post('/avatar', authenticate, require('../controllers/auth.controller').uploadAvatar);
 router.post('/refresh', validate(refreshSchema), refresh);
 
 module.exports = router;

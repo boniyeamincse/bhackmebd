@@ -43,6 +43,8 @@ const notifyCapacityFreed = () => {
   if (next) next();
 };
 
+const isMissingNetworkError = (err) => /network\s+.+\s+not found/i.test(String(err?.message || ''));
+
 const waitUntilCapacity = async () => {
   while (true) {
     const active = await countActiveContainers();
@@ -82,27 +84,102 @@ const getOrCreateContainer = async (userId) => {
     }
   }
 
-  await waitUntilCapacity();
-
-  const container = await docker.createContainer({
-    Image: IMAGE,
-    name: containerName(userId),
-    HostConfig: {
-      Memory: parseMemory(MEMORY),
-      MemorySwap: parseMemory(MEMORY),
-      NanoCpus: Math.floor(CPU * 1e9),
-      PidsLimit: 50,
-      ReadonlyRootfs: true,
-      Tmpfs: { '/tmp': 'size=50m,noexec', '/home/hacker': 'size=100m' },
-      NetworkMode: CONTAINER_NETWORK,
-      SecurityOpt: ['no-new-privileges'],
-      CapDrop: ['ALL'],
-    },
-    Tty: true,
-    OpenStdin: true,
+  // If Redis session is missing but Docker still has a named container, reuse it.
+  const existing = await docker.listContainers({
+    all: true,
+    filters: { name: [containerName(userId)] },
   });
 
-  await container.start();
+  if (existing.length > 0) {
+    const existingContainer = docker.getContainer(existing[0].Id);
+    try {
+      const info = await existingContainer.inspect();
+
+      if (!info.State?.Running) {
+        await existingContainer.start();
+      }
+
+      const refreshed = await existingContainer.inspect();
+      const containerIp =
+        refreshed.NetworkSettings?.Networks?.[CONTAINER_NETWORK]?.IPAddress || null;
+
+      await writeSession(userId, { containerId: existingContainer.id, containerIp });
+      await ContainerTimeoutQueue.scheduleIdleKill(userId, existingContainer.id, TIMEOUT);
+
+      return existingContainer;
+    } catch (err) {
+      if (!isMissingNetworkError(err)) throw err;
+      await existingContainer.remove({ force: true }).catch(() => null);
+    }
+  }
+
+  await waitUntilCapacity();
+
+  let container;
+  try {
+    container = await docker.createContainer({
+      Image: IMAGE,
+      name: containerName(userId),
+      HostConfig: {
+        Memory: parseMemory(MEMORY),
+        MemorySwap: parseMemory(MEMORY),
+        NanoCpus: Math.floor(CPU * 1e9),
+        PidsLimit: 50,
+        ReadonlyRootfs: true,
+        Tmpfs: { '/tmp': 'size=50m,noexec', '/home/hacker': 'size=100m,uid=100,gid=101,mode=700' },
+        NetworkMode: CONTAINER_NETWORK,
+        SecurityOpt: ['no-new-privileges'],
+        CapDrop: ['ALL'],
+      },
+      Tty: true,
+      OpenStdin: true,
+    });
+  } catch (err) {
+    // Handle race condition where another request created same named container.
+    if (err?.statusCode === 409) {
+      const byName = await docker.listContainers({
+        all: true,
+        filters: { name: [containerName(userId)] },
+      });
+
+      if (byName.length > 0) {
+        container = docker.getContainer(byName[0].Id);
+      } else {
+        throw err;
+      }
+    } else {
+      throw err;
+    }
+  }
+
+  const current = await container.inspect();
+  if (!current.State?.Running) {
+    try {
+      await container.start();
+    } catch (err) {
+      if (!isMissingNetworkError(err)) throw err;
+
+      await container.remove({ force: true }).catch(() => null);
+      container = await docker.createContainer({
+        Image: IMAGE,
+        name: containerName(userId),
+        HostConfig: {
+          Memory: parseMemory(MEMORY),
+          MemorySwap: parseMemory(MEMORY),
+          NanoCpus: Math.floor(CPU * 1e9),
+          PidsLimit: 50,
+          ReadonlyRootfs: true,
+          Tmpfs: { '/tmp': 'size=50m,noexec', '/home/hacker': 'size=100m,uid=100,gid=101,mode=700' },
+          NetworkMode: CONTAINER_NETWORK,
+          SecurityOpt: ['no-new-privileges'],
+          CapDrop: ['ALL'],
+        },
+        Tty: true,
+        OpenStdin: true,
+      });
+      await container.start();
+    }
+  }
   const inspect = await container.inspect();
   const containerIp = inspect.NetworkSettings?.Networks?.[CONTAINER_NETWORK]?.IPAddress || null;
 

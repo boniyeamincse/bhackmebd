@@ -55,9 +55,12 @@ const login = async (req, res, next) => {
         id: user.id, 
         username: user.username, 
         email: user.email, 
+        full_name: user.full_name,
+        avatar_url: user.avatar_url,
         role: user.role,
         level: user.level,
-        total_xp: user.total_xp
+        total_xp: user.total_xp,
+        badges: user.badges
       },
     });
   } catch (err) {
@@ -169,4 +172,55 @@ const resetPassword = async (req, res, next) => {
   }
 };
 
-module.exports = { register, login, logout, me, refresh, forgotPassword, resetPassword };
+const fs = require('fs').promises;
+const path = require('path');
+
+const updateProfile = async (req, res, next) => {
+  try {
+    const { full_name } = req.body;
+    const user = await prisma.users.update({
+      where: { id: req.user.id },
+      data: { full_name },
+      select: { id: true, username: true, email: true, full_name: true, avatar_url: true, role: true, level: true, total_xp: true, badges: true },
+    });
+    res.json({ user });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const uploadAvatar = async (req, res, next) => {
+  try {
+    const { avatar } = req.body; // Base64 string
+    if (!avatar) throw new AppError('Avatar data required', 400);
+
+    const matches = avatar.match(/^data:image\/([A-Za-z-+/]+);base64,(.+)$/);
+    if (!matches || matches.length !== 3) throw new AppError('Invalid image format', 400);
+
+    const extension = matches[1];
+    const data = Buffer.from(matches[2], 'base64');
+    const filename = `avatar-${req.user.id}-${Date.now()}.${extension}`;
+    const uploadDir = path.join(process.cwd(), 'uploads', 'avatars');
+    const filePath = path.join(uploadDir, filename);
+
+    // Ensure directory exists
+    await fs.mkdir(uploadDir, { recursive: true });
+
+    // Write file
+    await fs.writeFile(filePath, data);
+
+    const avatarUrl = `/uploads/avatars/${filename}`;
+
+    const user = await prisma.users.update({
+      where: { id: req.user.id },
+      data: { avatar_url: avatarUrl },
+      select: { id: true, username: true, email: true, full_name: true, avatar_url: true, role: true, level: true, total_xp: true, badges: true },
+    });
+
+    res.json({ user });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { register, login, logout, me, refresh, forgotPassword, resetPassword, updateProfile, uploadAvatar };
