@@ -43,6 +43,22 @@ B-HackMe is a gamified, interactive platform designed to teach Linux and cyberse
 
 ---
 
+## 🧪 Testing Credentials
+
+You can use the following pre-configured accounts to test the platform's features:
+
+### 🔑 Admin Access
+- **Email**: `admin@bhackme.co`
+- **Password**: `admin123`
+- **Role**: Administrator (Full access to all labs and stats)
+
+### 👤 Regular User
+- **Email**: `hacker@bhackme.co`
+- **Password**: `hacker123`
+- **Role**: Student (Start your journey from beginner level)
+
+---
+
 ## 🚀 Getting Started
 
 ### Prerequisites

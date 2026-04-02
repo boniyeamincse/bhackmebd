@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
 import api from '@/lib/api';
 
 interface Props {
@@ -14,19 +15,42 @@ export default function Leaderboard({ compact = false }: Props) {
   const rows = compact ? (data || []).slice(0, 5) : data || [];
 
   return (
-    <div className="bg-gray-900 rounded-xl p-5">
-      <h2 className="text-terminal-green font-bold font-mono mb-4">🏆 Leaderboard</h2>
-      <ol className="space-y-2">
+    <div className="w-full">
+      <div className="space-y-1">
         {rows.map((user: any, i: number) => (
-          <li key={user.username} className="flex items-center justify-between text-sm">
-            <div className="flex items-center gap-2">
-              <span className="text-gray-500 w-5">{i + 1}</span>
-              <span className="text-white">{user.username}</span>
+          <motion.div
+            key={user.username}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: i * 0.05 }}
+            className={`flex items-center justify-between p-3 rounded-xl border border-transparent hover:border-white/5 transition-all ${
+              i === 0 ? 'bg-green-500/5' : ''
+            }`}
+          >
+            <div className="flex items-center gap-4">
+              <span className={`w-6 text-center font-mono font-bold ${
+                i === 0 ? 'text-yellow-500' : i === 1 ? 'text-gray-400' : i === 2 ? 'text-orange-500' : 'text-white/20'
+              }`}>
+                {i + 1}
+              </span>
+              <div className="flex flex-col">
+                <span className="text-sm font-bold text-white tracking-tight">{user.username}</span>
+                <span className="text-[10px] text-gray-500 uppercase font-bold tracking-tighter">{user.level || 'Script Kiddie'}</span>
+              </div>
             </div>
-            <span className="text-terminal-green font-mono">{user.total_xp} XP</span>
-          </li>
+            <div className="text-right">
+              <span className="text-sm font-mono font-bold text-green-500">{user.total_xp.toLocaleString()}</span>
+              <span className="text-[10px] text-gray-600 block uppercase font-bold tracking-widest">XP</span>
+            </div>
+          </motion.div>
         ))}
-      </ol>
+      </div>
+      
+      {rows.length === 0 && (
+        <div className="py-12 text-center text-gray-600 text-sm italic">
+          Fetching top operatives...
+        </div>
+      )}
     </div>
   );
 }
