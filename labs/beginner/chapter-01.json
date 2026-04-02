@@ -1,63 +1,291 @@
 {
   "id": "chapter-01",
-  "title": "Introduction to Linux",
+  "title": "Linux Fundamentals Lab",
   "level": "beginner",
   "order_index": 1,
   "xp_reward": 100,
   "lessons": [
     {
-      "title": "What is Linux?",
+      "title": "Topic Read: Linux and Terminal Basics",
       "order_index": 1,
-      "xp_reward": 50,
-      "content_md": "## What is Linux?\n\nLinux is a free, open-source operating system used in servers, desktops, phones, and embedded systems.\n\n### Why Learn Linux?\n\n- Powers 96% of the world's top web servers\n- Essential for DevOps, Cloud, and Cybersecurity\n- Foundation of Android and many embedded systems\n\n### The Terminal\n\nThe terminal is your primary interface with Linux. Commands are typed and executed line by line.\n\n```bash\n# Your first command\necho \"Hello, Linux!\"\n```",
-      "tasks": [
-        {
-          "description": "Print 'Hello, Linux!' using the echo command.",
-          "expected_output": "Hello, Linux!",
-          "validation_type": "contains",
-          "hint": "Type: echo \"Hello, Linux!\"",
-          "xp_reward": 25,
-          "order_index": 1
-        }
-      ]
+      "xp_reward": 10,
+      "content_md": "## Linux Fundamentals\n\nWelcome to your first lab. In this chapter, you will understand what Linux is and how the terminal works.\n\n### Learning goals\n\n- Understand the Linux shell environment\n- Run basic navigation and file commands\n- Read command output and verify results\n- Build confidence before practical challenges\n\n### Why this matters\n\nLinux powers modern servers, cloud systems, and cybersecurity tools. If you can use the terminal well, you can work faster and solve real problems.\n\n### Safety tips\n\n- Read every command before pressing Enter\n- Avoid destructive commands with `rm -rf` unless needed\n- Use `pwd` often so you know your location\n\n### Core command examples\n\n```bash\nwhoami\npwd\nls -la\nmkdir ~/lab1\ntouch ~/lab1/notes.txt\n```",
+      "tasks": []
     },
     {
-      "title": "The Terminal",
+      "title": "Command Examples Part 1 (10 Commands)",
       "order_index": 2,
-      "xp_reward": 50,
-      "content_md": "## The Terminal\n\nThe terminal runs a **shell** — a program that interprets your commands.\n\nThe default shell on most Linux systems is **bash**.\n\n### Useful shortcuts\n\n| Shortcut | Action |\n|---|---|\n| `Ctrl+C` | Cancel current command |\n| `Ctrl+L` | Clear screen |\n| `Tab` | Autocomplete |\n| `↑` / `↓` | Command history |\n\n### Try it\n\n```bash\nuname -a\n```",
+      "xp_reward": 35,
+      "content_md": "## Guided Commands: Part 1\n\nRun each command in order. These steps prepare your workspace for the rest of the lab.\n\n```bash\npwd\nwhoami\nls /\nls -la ~\ncd /etc && pwd\ncd ~ && pwd\nmkdir -p ~/lab1 && ls ~\ntouch ~/lab1/notes.txt && ls ~/lab1\necho 'Linux beginner lab' > ~/lab1/notes.txt && cat ~/lab1/notes.txt\ncat ~/lab1/notes.txt | wc -w\n```",
       "tasks": [
         {
-          "description": "Show system information using the uname command with the -a flag.",
-          "expected_output": "Linux",
-          "validation_type": "contains",
-          "hint": "Type: uname -a",
-          "xp_reward": 25,
-          "order_index": 1
-        }
-      ]
-    },
-    {
-      "title": "Your First Commands",
-      "order_index": 3,
-      "xp_reward": 50,
-      "content_md": "## Your First Commands\n\n| Command | Description |\n|---|---|\n| `whoami` | Show current user |\n| `pwd` | Print working directory |\n| `ls` | List directory contents |\n| `date` | Show current date/time |\n\n### Practice\n\n```bash\nwhoami\npwd\nls\ndate\n```",
-      "tasks": [
-        {
-          "description": "Find out who you are logged in as using whoami.",
-          "expected_output": "hacker",
-          "validation_type": "contains",
-          "hint": "Type: whoami",
-          "xp_reward": 25,
-          "order_index": 1
-        },
-        {
-          "description": "Print the current working directory using pwd.",
+          "description": "C01: Print your current directory.",
           "expected_output": "/home/hacker",
           "validation_type": "contains",
           "hint": "Type: pwd",
-          "xp_reward": 25,
+          "xp_reward": 2,
+          "order_index": 1
+        },
+        {
+          "description": "C02: Show your current username.",
+          "expected_output": "hacker",
+          "validation_type": "contains",
+          "hint": "Type: whoami",
+          "xp_reward": 2,
           "order_index": 2
+        },
+        {
+          "description": "C03: List folders from root and verify /etc appears.",
+          "expected_output": "etc",
+          "validation_type": "contains",
+          "hint": "Type: ls /",
+          "xp_reward": 2,
+          "order_index": 3
+        },
+        {
+          "description": "C04: Show hidden files in home with detailed output.",
+          "expected_output": ".bashrc",
+          "validation_type": "contains",
+          "hint": "Type: ls -la ~",
+          "xp_reward": 2,
+          "order_index": 4
+        },
+        {
+          "description": "C05: Move to /etc and print path.",
+          "expected_output": "/etc",
+          "validation_type": "contains",
+          "hint": "Type: cd /etc && pwd",
+          "xp_reward": 2,
+          "order_index": 5
+        },
+        {
+          "description": "C06: Return to home and print path.",
+          "expected_output": "/home/hacker",
+          "validation_type": "contains",
+          "hint": "Type: cd ~ && pwd",
+          "xp_reward": 2,
+          "order_index": 6
+        },
+        {
+          "description": "C07: Create directory lab1 in home and verify it exists.",
+          "expected_output": "lab1",
+          "validation_type": "contains",
+          "hint": "Type: mkdir -p ~/lab1 && ls ~",
+          "xp_reward": 2,
+          "order_index": 7
+        },
+        {
+          "description": "C08: Create notes.txt inside lab1 and list the folder.",
+          "expected_output": "notes.txt",
+          "validation_type": "contains",
+          "hint": "Type: touch ~/lab1/notes.txt && ls ~/lab1",
+          "xp_reward": 2,
+          "order_index": 8
+        },
+        {
+          "description": "C09: Write text to notes.txt and print file content.",
+          "expected_output": "Linux beginner lab",
+          "validation_type": "contains",
+          "hint": "Type: echo 'Linux beginner lab' > ~/lab1/notes.txt && cat ~/lab1/notes.txt",
+          "xp_reward": 2,
+          "order_index": 9
+        },
+        {
+          "description": "C10: Count words in notes.txt.",
+          "expected_output": "3",
+          "validation_type": "contains",
+          "hint": "Type: cat ~/lab1/notes.txt | wc -w",
+          "xp_reward": 2,
+          "order_index": 10
+        }
+      ]
+    },
+    {
+      "title": "Command Examples Part 2 (10 Commands)",
+      "order_index": 3,
+      "xp_reward": 35,
+      "content_md": "## Guided Commands: Part 2\n\nContinue with the next 10 commands.\n\n```bash\ncp ~/lab1/notes.txt ~/lab1/notes_backup.txt && ls ~/lab1\nmv ~/lab1/notes_backup.txt ~/lab1/archive.txt && ls ~/lab1\nhead -n 1 ~/lab1/notes.txt\ntail -n 1 ~/lab1/notes.txt\ngrep 'Linux' ~/lab1/notes.txt\nchmod 600 ~/lab1/notes.txt && ls -l ~/lab1/notes.txt\nhistory | tail -n 5\nfind ~/lab1 -name 'notes.txt'\nuname -a | grep Linux\nrm ~/lab1/archive.txt && echo removed\n```",
+      "tasks": [
+        {
+          "description": "C11: Copy notes.txt to notes_backup.txt.",
+          "expected_output": "notes_backup.txt",
+          "validation_type": "contains",
+          "hint": "Type: cp ~/lab1/notes.txt ~/lab1/notes_backup.txt && ls ~/lab1",
+          "xp_reward": 2,
+          "order_index": 1
+        },
+        {
+          "description": "C12: Rename notes_backup.txt to archive.txt.",
+          "expected_output": "archive.txt",
+          "validation_type": "contains",
+          "hint": "Type: mv ~/lab1/notes_backup.txt ~/lab1/archive.txt && ls ~/lab1",
+          "xp_reward": 2,
+          "order_index": 2
+        },
+        {
+          "description": "C13: Show the first line of notes.txt.",
+          "expected_output": "Linux beginner lab",
+          "validation_type": "contains",
+          "hint": "Type: head -n 1 ~/lab1/notes.txt",
+          "xp_reward": 2,
+          "order_index": 3
+        },
+        {
+          "description": "C14: Show the last line of notes.txt.",
+          "expected_output": "Linux beginner lab",
+          "validation_type": "contains",
+          "hint": "Type: tail -n 1 ~/lab1/notes.txt",
+          "xp_reward": 2,
+          "order_index": 4
+        },
+        {
+          "description": "C15: Search for Linux in notes.txt.",
+          "expected_output": "Linux",
+          "validation_type": "contains",
+          "hint": "Type: grep 'Linux' ~/lab1/notes.txt",
+          "xp_reward": 2,
+          "order_index": 5
+        },
+        {
+          "description": "C16: Set notes.txt permission to 600 and verify.",
+          "expected_output": "rw-------",
+          "validation_type": "contains",
+          "hint": "Type: chmod 600 ~/lab1/notes.txt && ls -l ~/lab1/notes.txt",
+          "xp_reward": 2,
+          "order_index": 6
+        },
+        {
+          "description": "C17: Display your recent command history.",
+          "expected_output": "history",
+          "validation_type": "contains",
+          "hint": "Type: history | tail -n 5",
+          "xp_reward": 2,
+          "order_index": 7
+        },
+        {
+          "description": "C18: Find notes.txt inside lab1.",
+          "expected_output": "notes.txt",
+          "validation_type": "contains",
+          "hint": "Type: find ~/lab1 -name 'notes.txt'",
+          "xp_reward": 2,
+          "order_index": 8
+        },
+        {
+          "description": "C19: Print Linux system info and filter Linux text.",
+          "expected_output": "Linux",
+          "validation_type": "contains",
+          "hint": "Type: uname -a | grep Linux",
+          "xp_reward": 2,
+          "order_index": 9
+        },
+        {
+          "description": "C20: Remove archive.txt and print confirmation.",
+          "expected_output": "removed",
+          "validation_type": "contains",
+          "hint": "Type: rm ~/lab1/archive.txt && echo removed",
+          "xp_reward": 2,
+          "order_index": 10
+        }
+      ]
+    },
+    {
+      "title": "Exercises (5)",
+      "order_index": 4,
+      "xp_reward": 10,
+      "content_md": "## Practical Exercises\n\nComplete these five hands-on exercises.\n\n- E1 and E2 are easy\n- E3 and E4 are medium\n- E5 is medium-hard\n\nUse the command examples from the previous lessons.",
+      "tasks": [
+        {
+          "description": "E1: Create ~/lab1/docs and ~/lab1/scripts, then list ~/lab1.",
+          "expected_output": "docs",
+          "validation_type": "contains",
+          "hint": "Type: mkdir -p ~/lab1/docs ~/lab1/scripts && ls ~/lab1",
+          "xp_reward": 6,
+          "order_index": 1
+        },
+        {
+          "description": "E2: Create two lines in ~/lab1/docs/todo.txt, then show total line count.",
+          "expected_output": "2",
+          "validation_type": "contains",
+          "hint": "Type: printf 'task1\ntask2\n' > ~/lab1/docs/todo.txt && wc -l ~/lab1/docs/todo.txt",
+          "xp_reward": 6,
+          "order_index": 2
+        },
+        {
+          "description": "E3: Copy todo.txt to scripts as todo_backup.txt and list scripts folder.",
+          "expected_output": "todo_backup.txt",
+          "validation_type": "contains",
+          "hint": "Type: cp ~/lab1/docs/todo.txt ~/lab1/scripts/todo_backup.txt && ls ~/lab1/scripts",
+          "xp_reward": 6,
+          "order_index": 3
+        },
+        {
+          "description": "E4: Find todo_backup.txt from home directory.",
+          "expected_output": "todo_backup.txt",
+          "validation_type": "contains",
+          "hint": "Type: find ~ -name 'todo_backup.txt'",
+          "xp_reward": 6,
+          "order_index": 4
+        },
+        {
+          "description": "E5: Set permission 700 on ~/lab1/scripts and verify with ls -ld.",
+          "expected_output": "rwx------",
+          "validation_type": "contains",
+          "hint": "Type: chmod 700 ~/lab1/scripts && ls -ld ~/lab1/scripts",
+          "xp_reward": 6,
+          "order_index": 5
+        }
+      ]
+    },
+    {
+      "title": "MCQ Quiz (5)",
+      "order_index": 5,
+      "xp_reward": 10,
+      "content_md": "## MCQ: Linux Fundamentals\n\nAnswer using option index (0-3).\n\nExample: If option 2 is correct, submit `2`.\n\nThese questions check your understanding of the same topic you practiced.",
+      "tasks": [
+        {
+          "description": "Q1: Which command prints your current working directory?",
+          "expected_output": "1",
+          "validation_type": "mcq",
+          "validation_rule": "[\"ls\",\"pwd\",\"cd\",\"whoami\"]",
+          "hint": "Submit the correct option index (0-3).",
+          "xp_reward": 4,
+          "order_index": 1
+        },
+        {
+          "description": "Q2: Which command shows hidden files with details?",
+          "expected_output": "2",
+          "validation_type": "mcq",
+          "validation_rule": "[\"ls\",\"ls /\",\"ls -la\",\"cat\"]",
+          "hint": "Submit the correct option index (0-3).",
+          "xp_reward": 4,
+          "order_index": 2
+        },
+        {
+          "description": "Q3: Which command is used to search text inside a file?",
+          "expected_output": "0",
+          "validation_type": "mcq",
+          "validation_rule": "[\"grep\",\"mkdir\",\"pwd\",\"mv\"]",
+          "hint": "Submit the correct option index (0-3).",
+          "xp_reward": 4,
+          "order_index": 3
+        },
+        {
+          "description": "Q4: What does chmod 600 mean for a file?",
+          "expected_output": "3",
+          "validation_type": "mcq",
+          "validation_rule": "[\"Everyone can read/write/execute\",\"Owner can execute only\",\"Group can write\",\"Owner can read and write only\"]",
+          "hint": "Submit the correct option index (0-3).",
+          "xp_reward": 4,
+          "order_index": 4
+        },
+        {
+          "description": "Q5: Which command helps locate files by name?",
+          "expected_output": "1",
+          "validation_type": "mcq",
+          "validation_rule": "[\"tail\",\"find\",\"echo\",\"wc\"]",
+          "hint": "Submit the correct option index (0-3).",
+          "xp_reward": 4,
+          "order_index": 5
         }
       ]
     }
