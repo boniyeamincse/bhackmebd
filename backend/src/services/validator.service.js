@@ -1,5 +1,6 @@
 const customValidators = {
   file_created: (output) => output.includes('test.txt'),
+  sandbox_exists: (output) => output.includes('sandbox'),
   permission_700: (output) => /rwx------/.test(output),
   process_running: (output) => output.includes('RUNNING'),
 };
