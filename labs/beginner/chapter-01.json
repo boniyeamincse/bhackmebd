@@ -1,0 +1,65 @@
+{
+  "id": "chapter-01",
+  "title": "Introduction to Linux",
+  "level": "beginner",
+  "order_index": 1,
+  "xp_reward": 100,
+  "lessons": [
+    {
+      "title": "What is Linux?",
+      "order_index": 1,
+      "xp_reward": 50,
+      "content_md": "## What is Linux?\n\nLinux is a free, open-source operating system used in servers, desktops, phones, and embedded systems.\n\n### Why Learn Linux?\n\n- Powers 96% of the world's top web servers\n- Essential for DevOps, Cloud, and Cybersecurity\n- Foundation of Android and many embedded systems\n\n### The Terminal\n\nThe terminal is your primary interface with Linux. Commands are typed and executed line by line.\n\n```bash\n# Your first command\necho \"Hello, Linux!\"\n```",
+      "tasks": [
+        {
+          "description": "Print 'Hello, Linux!' using the echo command.",
+          "expected_output": "Hello, Linux!",
+          "validation_type": "contains",
+          "hint": "Type: echo \"Hello, Linux!\"",
+          "xp_reward": 25,
+          "order_index": 1
+        }
+      ]
+    },
+    {
+      "title": "The Terminal",
+      "order_index": 2,
+      "xp_reward": 50,
+      "content_md": "## The Terminal\n\nThe terminal runs a **shell** — a program that interprets your commands.\n\nThe default shell on most Linux systems is **bash**.\n\n### Useful shortcuts\n\n| Shortcut | Action |\n|---|---|\n| `Ctrl+C` | Cancel current command |\n| `Ctrl+L` | Clear screen |\n| `Tab` | Autocomplete |\n| `↑` / `↓` | Command history |\n\n### Try it\n\n```bash\nuname -a\n```",
+      "tasks": [
+        {
+          "description": "Show system information using the uname command with the -a flag.",
+          "expected_output": "Linux",
+          "validation_type": "contains",
+          "hint": "Type: uname -a",
+          "xp_reward": 25,
+          "order_index": 1
+        }
+      ]
+    },
+    {
+      "title": "Your First Commands",
+      "order_index": 3,
+      "xp_reward": 50,
+      "content_md": "## Your First Commands\n\n| Command | Description |\n|---|---|\n| `whoami` | Show current user |\n| `pwd` | Print working directory |\n| `ls` | List directory contents |\n| `date` | Show current date/time |\n\n### Practice\n\n```bash\nwhoami\npwd\nls\ndate\n```",
+      "tasks": [
+        {
+          "description": "Find out who you are logged in as using whoami.",
+          "expected_output": "hacker",
+          "validation_type": "contains",
+          "hint": "Type: whoami",
+          "xp_reward": 25,
+          "order_index": 1
+        },
+        {
+          "description": "Print the current working directory using pwd.",
+          "expected_output": "/home/hacker",
+          "validation_type": "contains",
+          "hint": "Type: pwd",
+          "xp_reward": 25,
+          "order_index": 2
+        }
+      ]
+    }
+  ]
+}
