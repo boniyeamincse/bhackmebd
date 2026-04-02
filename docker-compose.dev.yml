@@ -2,8 +2,10 @@ version: '3.9'
 
 networks:
   bhackme-net:
+    name: bhackme-net
     driver: bridge
   terminal-net:
+    name: terminal-net
     driver: bridge
     internal: true
 
@@ -53,6 +55,7 @@ services:
       - APP_URL=http://localhost:3000
       - DOCKER_SOCKET=/var/run/docker.sock
       - USER_CONTAINER_IMAGE=bhackme/terminal:latest
+      - CONTAINER_NETWORK=bhackme-net
       - MAX_CONTAINERS=10
       - CONTAINER_TIMEOUT=3600
     depends_on:
