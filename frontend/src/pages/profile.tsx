@@ -25,7 +25,7 @@ function ProfilePage() {
   });
 
   const updateProfileMutation = useMutation({
-    mutationFn: (data: { full_name: string }) => api.put('/auth/profile', data),
+    mutationFn: (data: { full_name: string }) => api.put('/profile', data),
     onSuccess: (res) => {
       setAuth(res.data.user, token!, refreshToken);
       setIsEditing(false);
@@ -33,7 +33,7 @@ function ProfilePage() {
   });
 
   const uploadAvatarMutation = useMutation({
-    mutationFn: (avatar: string) => api.post('/auth/avatar', { avatar }),
+    mutationFn: (avatar: string) => api.patch('/profile/avatar', { avatar }),
     onSuccess: (res) => {
       setAuth(res.data.user, token!, refreshToken);
     },
