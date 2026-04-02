@@ -39,6 +39,13 @@ function ProfilePage() {
     },
   });
 
+  const removeAvatarMutation = useMutation({
+    mutationFn: () => api.delete('/profile/avatar'),
+    onSuccess: (res) => {
+      setAuth(res.data.user, token!, refreshToken);
+    },
+  });
+
   const completedChapters = useMemo(() => {
     const rows = data?.progress || [];
     const byChapter = new Map<string, boolean>();
@@ -119,6 +126,15 @@ function ProfilePage() {
               {uploadAvatarMutation.isPending && (
                 <p className="text-[10px] mt-6 text-terminal-green font-mono uppercase tracking-wider text-center">Uploading avatar...</p>
               )}
+              <div className="mt-8 flex justify-center">
+                <button
+                  onClick={() => removeAvatarMutation.mutate()}
+                  disabled={!avatar || removeAvatarMutation.isPending}
+                  className="text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-lg border border-red-500/30 text-red-300 bg-red-500/5 hover:bg-red-500/10 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  {removeAvatarMutation.isPending ? 'Removing...' : 'Remove Avatar'}
+                </button>
+              </div>
             </div>
 
             <div className="flex-1 text-center md:text-left space-y-6">
