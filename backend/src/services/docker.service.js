@@ -3,7 +3,7 @@ const redis = require('../config/redis');
 const logger = require('../utils/logger');
 const ContainerTimeoutQueue = require('../queues/containerTimeout.queue');
 
-const IMAGE = process.env.USER_CONTAINER_IMAGE || 'bhackme/terminal:latest';
+const IMAGE = process.env.USER_CONTAINER_IMAGE || 'boniyeamin/bhackme-terminal:latest';
 const MEMORY = process.env.CONTAINER_MEMORY_LIMIT || '128m';
 const CPU = parseFloat(process.env.CONTAINER_CPU_LIMIT || '0.5');
 const TIMEOUT = parseInt(process.env.CONTAINER_IDLE_TIMEOUT || '3600', 10);
