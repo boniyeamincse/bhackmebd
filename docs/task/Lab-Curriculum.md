@@ -1,112 +1,175 @@
-# 🧪 B-HackMe: Lab Curriculum & Task Checklist
+# B-HackMe Lab Curriculum and Delivery Workflow
 
-This document tracks the specific lessons and tasks within each laboratory "box". 🟢🟡🔵🔴
+This file defines a standard format for every lab so the learning flow is consistent and gamified.
 
----
+## 1. Standard Rules for Every Lab
 
-## 🟢 Beginner Level (Linux Fundamentals)
+- Each lab includes exactly 20 command tasks.
+- Each lab includes exactly 5 exercises (hands-on practical problems).
+- Each lab includes exactly 5 MCQ questions tied to that lab topic.
+- Each lab awards total points between 50 and 100.
+- Learner flow is always: Read topic -> Practice command examples -> Complete 5 exercises -> Complete 5 MCQs -> Receive points and update account.
 
-### 1. Linux Fundamentals Lab
-- [ ] **Lesson: Your First Commands**
-  - [ ] Task 1: Print current working directory (`pwd`)
-  - [ ] Task 2: List files in current directory (`ls`)
-  - [ ] Task 3: Change directory to home (`cd ~`)
+## 2. Learner Workflow (Must Be Same in All Labs)
 
-### 2. Command Line Basics Lab
-- [ ] **Lesson: Text Output**
-  - [ ] Task 1: Use `echo` to print a string
-  - [ ] Task 2: Use `cat` to read a file content
-  - [ ] Task 3: Check command history (`history`)
+1. Topic Read Page
+   - Learner reads short theory for the topic.
+   - Include key concepts, command syntax, and safety notes.
+2. Command Example Page
+   - Show guided examples for all required commands.
+   - Learner can run commands in terminal sandbox.
+3. Exercise Page (5 Exercises)
+   - Open only after topic read and command examples are completed.
+   - Practical mini-challenges from easy to medium.
+4. MCQ Page (5 Questions)
+   - Open only after all 5 exercises are submitted.
+   - Questions must test understanding of the same topic.
+5. Completion and Reward
+   - System calculates score.
+   - Points are added to learner account.
+   - Progress, streak, and badges are updated.
 
-### 3. File System Exploration Lab
-- [ ] **Lesson: File Operations**
-  - [ ] Task 1: Create an empty file (`touch`)
-  - [ ] Task 2: Create a new directory (`mkdir`)
-  - [ ] Task 3: Copy a file to a new location (`cp`)
+## 3. Scoring Model (50 to 100 Points Per Lab)
 
-### 4. Linux Permissions & Ownership Lab
-- [ ] **Lesson: chmod & chown**
-  - [ ] Task 1: Change file permissions to 777 (`chmod`)
-  - [ ] Task 2: Change file owner to root (`chown`)
-  - [ ] Task 3: Identify file permissions using `ls -l`
+Use this default model for consistent progression:
 
-### 5. Basic Package Management Lab
-- [ ] **Lesson: Apt Basics**
-  - [ ] Task 1: Update package lists (`apt update`)
-  - [ ] Task 2: Search for a package (`apt search`)
-  - [ ] Task 3: Install a sample package (`apt install`)
+- Base completion points: 50
+- Exercise performance bonus: up to 30
+- MCQ performance bonus: up to 20
+- Maximum total: 100
 
----
+Formula:
 
-## 🟡 Intermediate Level
+- Lab Points = 50 + Exercise Bonus + MCQ Bonus
+- Exercise Bonus = correct exercise ratio x 30
+- MCQ Bonus = correct MCQ ratio x 20
 
-### 6. Linux Intermediate Operations Lab
-- [ ] **Lesson: Grep & Find**
-  - [ ] Task 1: Search for a string in a file (`grep`)
-  - [ ] Task 2: Find a file by name (`find`)
-  - [ ] Task 3: Pipe output between commands (`|`)
+Difficulty recommendation:
 
-### 7. Process & Service Management Lab
-- [ ] **Lesson: Systemd**
-  - [ ] Task 1: List all running services (`systemctl list-units`)
-  - [ ] Task 2: Check status of a service (`systemctl status`)
-  - [ ] Task 3: List processes using `ps aux`
+- Beginner labs target 50-70 average points.
+- Intermediate labs target 60-85 average points.
+- Advanced labs target 70-100 average points.
 
-### 8. Disk & Storage Management Lab
-- [ ] **Lesson: Disk Usage**
-  - [ ] Task 1: Check free disk space (`df -h`)
-  - [ ] Task 2: Check directory size (`du -sh`)
-  - [ ] Task 3: List mounted filesystems (`mount`)
+## 4. Lab Blueprint Template (Use for Every New Lab)
 
-### 9. Shell Scripting Basics Lab
-- [ ] **Lesson: Variables & Loops**
-  - [ ] Task 1: Define and print a variable in Bash
-  - [ ] Task 2: Create a simple `for` loop script
-  - [ ] Task 3: Make a script executable (`chmod +x`)
+### Lab [ID]: [Lab Name]
 
-### 10. User & Group Management Lab
-- [ ] **Lesson: User Management**
-  - [ ] Task 1: Create a new user (`useradd`)
-  - [ ] Task 2: Add a user to a group (`usermod -aG`)
-  - [ ] Task 3: List all system users (`cat /etc/passwd`)
+- Level: Beginner | Intermediate | Advanced
+- Topic: [Main topic]
+- Total commands: 20
+- Total exercises: 5
+- Total MCQ: 5
+- Point range: 50-100
 
----
+#### A. Topic Read Content Checklist
 
-## 🔵 Advanced Level
+- [ ] Learning objectives written (3 to 5 objectives)
+- [ ] Core concepts explained simply
+- [ ] Command safety and warnings added
+- [ ] Real-world use case included
 
-### 11. Advanced Linux Administration Lab
-- [ ] **Lesson: Kernel Modules**
-  - [ ] Task 1: List loaded kernel modules (`lsmod`)
-  - [ ] Task 2: Load a dummy module (`modprobe`)
-  - [ ] Task 3: Check kernel version (`uname -r`)
+#### B. Command Set (20)
 
-### 12. System Monitoring & Performance Lab
-- [ ] **Lesson: Monitoring Tools**
-  - [ ] Task 1: Monitor CPU usage (`top`)
-  - [ ] Task 2: Check memory statistics (`free -m`)
-  - [ ] Task 3: View I/O statistics (`iostat`)
+- [ ] C01 [command]
+- [ ] C02 [command]
+- [ ] C03 [command]
+- [ ] C04 [command]
+- [ ] C05 [command]
+- [ ] C06 [command]
+- [ ] C07 [command]
+- [ ] C08 [command]
+- [ ] C09 [command]
+- [ ] C10 [command]
+- [ ] C11 [command]
+- [ ] C12 [command]
+- [ ] C13 [command]
+- [ ] C14 [command]
+- [ ] C15 [command]
+- [ ] C16 [command]
+- [ ] C17 [command]
+- [ ] C18 [command]
+- [ ] C19 [command]
+- [ ] C20 [command]
 
-### 13. Security Hardening Lab
-- [ ] **Lesson: SSH Hardening**
-  - [ ] Task 1: Disable root login in `sshd_config`
-  - [ ] Task 2: Change default SSH port
-  - [ ] Task 3: Setup basic `ufw` firewall rules
+#### C. Exercises (5)
 
-### 14. Linux Troubleshooting Lab
-- [ ] **Lesson: Log Analysis**
-  - [ ] Task 1: Read system logs using `journalctl`
-  - [ ] Task 2: Tail the auth log (`tail -f /var/log/auth.log`)
-  - [ ] Task 3: Identify failed login attempts
+- [ ] E1 Easy scenario
+- [ ] E2 Easy/Medium scenario
+- [ ] E3 Medium scenario
+- [ ] E4 Medium/Hard scenario
+- [ ] E5 Hard scenario
 
----
+#### D. MCQ (5)
 
-## 🔴 Networking & Specialized
+- [ ] Q1 Concept check
+- [ ] Q2 Command syntax check
+- [ ] Q3 Output interpretation
+- [ ] Q4 Troubleshooting logic
+- [ ] Q5 Best practice/security check
 
-### 15. Linux Networking Lab
-- [ ] **Lesson: Network Basics**
-  - [ ] Task 1: [MCQ] Identify command for IP display
-  - [ ] Task 2: Check active network connections (`netstat`)
-  - [ ] Task 3: Test connectivity using `ping`
+#### E. Completion Gates
 
----
-**Happy Hacking!** 🇧🇩
+- [ ] Gate 1: Topic read completed before exercises unlock
+- [ ] Gate 2: All 5 exercises submitted before MCQ unlock
+- [ ] Gate 3: MCQ submitted before reward unlock
+
+#### F. Reward and Tracking
+
+- [ ] Points calculated (50-100)
+- [ ] Points added to account wallet/profile
+- [ ] XP and streak updated
+- [ ] Badge rule checked
+
+## 5. Curriculum Plan by Level and Lab
+
+Use this map with the same blueprint above.
+
+### Beginner (Labs 1-5)
+
+1. Linux Fundamentals
+2. Command Line Basics
+3. File System Exploration
+4. Permissions and Ownership
+5. Package Management Basics
+
+### Intermediate (Labs 6-10)
+
+6. Text Processing and Search
+7. Process and Service Management
+8. Disk and Storage Management
+9. Shell Scripting Basics
+10. User and Group Management
+
+### Advanced (Labs 11-15)
+
+11. Linux Administration Deep Dive
+12. Monitoring and Performance Tuning
+13. Security Hardening
+14. Troubleshooting and Incident Response
+15. Networking and Diagnostics
+
+## 6. Content Team Task Workflow
+
+For each lab, complete tasks in this order:
+
+1. Define topic objectives and outcomes.
+2. Select and validate exactly 20 commands.
+3. Write guided command examples.
+4. Design 5 exercises mapped to command skills.
+5. Design 5 MCQs mapped to the same topic.
+6. Configure unlock gates (read -> exercises -> MCQ).
+7. Configure scoring (50-100) and reward integration.
+8. QA test full lab from start to reward.
+9. Publish lab.
+
+## 7. QA Acceptance Checklist (Per Lab)
+
+- [ ] Exactly 20 commands exist and run in sandbox.
+- [ ] Exactly 5 exercises are visible and submittable.
+- [ ] Exactly 5 MCQs are visible and gradable.
+- [ ] Flow order is enforced correctly.
+- [ ] Points are always between 50 and 100.
+- [ ] Points are added to learner account after completion.
+- [ ] Progress UI updates after refresh and re-login.
+
+This plan gives a clear, repeatable learning journey and better lesson quality for every B-HackMe lab.
