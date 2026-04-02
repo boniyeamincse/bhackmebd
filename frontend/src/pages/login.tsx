@@ -80,6 +80,11 @@ export default function Login() {
                   className="w-full bg-white/5 border border-white/10 text-white px-5 py-3 rounded-xl outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition-all placeholder:text-white/20"
                   required
                 />
+                <div className="mt-2 text-right">
+                  <Link href="/forgot-password" className="text-xs font-semibold text-green-500 hover:text-green-400 transition-colors">
+                    Forgot password?
+                  </Link>
+                </div>
               </div>
             </div>
 
