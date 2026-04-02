@@ -11,6 +11,7 @@ const terminalRoutes = require('./api/routes/terminal.routes');
 const progressRoutes = require('./api/routes/progress.routes');
 const leaderboardRoutes = require('./api/routes/leaderboard.routes');
 const adminRoutes = require('./api/routes/admin.routes');
+const profileRoutes = require('./api/routes/profile.routes');
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use('/api/terminal', terminalRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/profile', profileRoutes);
 
 app.use(errorMiddleware);
 
