@@ -7,7 +7,7 @@
 ## 📊 Progress Dashboard
 
 **Overall Completion:** 
-`[██████████████░░░░░░░]` **68%** (68/100 Tasks Completed)
+`[████████████████░░░░]` **79%** (79/100 Tasks Completed)
 
 | Phase | Description | Tasks | Est. Days | Status |
 | :--- | :--- | :--- | :--- | :--- |
@@ -16,7 +16,7 @@
 | **Phase 3** | Docker Terminal Engine | 14/14 | 7 days | ✅ Done |
 | **Phase 4** | Learning Content API | 13/13 | 7 days | ✅ Done |
 | **Phase 5** | Frontend Foundation | 13/13 | 7 days | ✅ Done |
-| **Phase 6** | Terminal UI & Learn Page | 0/11 | 6 days | 🔲 Todo |
+| **Phase 6** | Terminal UI & Learn Page | 11/11 | 6 days | ✅ Done |
 | **Phase 7** | Gamification & User Profile | 0/8 | 4 days | 🔲 Todo |
 | **Phase 8** | Admin Panel | 0/7 | 4 days | 🔲 Todo |
 | **Phase 9** | Content Seeding | 0/4 | 2 days | 🔲 Todo |
@@ -113,17 +113,17 @@
 ---
 
 ## 💻 Phase 6: Terminal UI & Learn Page
-- [ ] **69** Integrate `xterm.js` `TerminalEmulator` component with `FitAddon` and `WebLinksAddon` 🔴
-- [ ] **70** Apply dark terminal theme (background: #0D1117, green foreground, JetBrains Mono font) 🟡
-- [ ] **71** Wire `TerminalEmulator` to `useSocket`: input → socket, output → xterm write 🔴
-- [ ] **72** Build `TerminalToolbar`: Reset, Clear screen, Copy output buttons 🟢
-- [ ] **73** Build `InstructionPanel`: Markdown renderer with syntax-highlighted code blocks 🔴
-- [ ] **74** Build `TaskCard`: task description, [Validate] button, attempt counter, hint toggle 🔴
-- [ ] **75** Build split-panel layout (resizable left/right) for the main learn page 🔴
-- [ ] **76** Implement task validation flow: capture buffer → call API → show result toast 🔴
-- [ ] **77** Build XP toast notification and badge earned modal on success events 🟡
-- [ ] **78** Build lesson progress bar and chapter navigation (prev/next) buttons 🟡
-- [ ] **79** Implement auto-scroll to next task on completion with smooth animation 🟢
+- [x] **69** Integrate `xterm.js` `TerminalEmulator` component with `FitAddon` and `WebLinksAddon` 🔴
+- [x] **70** Apply dark terminal theme (background: #0D1117, green foreground, JetBrains Mono font) 🟡
+- [x] **71** Wire `TerminalEmulator` to `useSocket`: input → socket, output → xterm write 🔴
+- [x] **72** Build `TerminalToolbar`: Reset, Clear screen, Copy output buttons 🟢
+- [x] **73** Build `InstructionPanel`: Markdown renderer with syntax-highlighted code blocks 🔴
+- [x] **74** Build `TaskCard`: task description, [Validate] button, attempt counter, hint toggle 🔴
+- [x] **75** Build split-panel layout (resizable left/right) for the main learn page 🔴
+- [x] **76** Implement task validation flow: capture buffer → call API → show result toast 🔴
+- [x] **77** Build XP toast notification and badge earned modal on success events 🟡
+- [x] **78** Build lesson progress bar and chapter navigation (prev/next) buttons 🟡
+- [x] **79** Implement auto-scroll to next task on completion with smooth animation 🟢
 
 ---
 
