@@ -21,4 +21,42 @@ const lessonSchema = Joi.object({
   is_published: Joi.boolean().default(false),
 });
 
-module.exports = { chapterSchema, lessonSchema };
+const chapterPublishSchema = Joi.object({
+  is_published: Joi.boolean().required(),
+});
+
+const chapterReorderSchema = Joi.object({
+  chapterIds: Joi.array().items(Joi.string().uuid()).min(1).required(),
+});
+
+const taskSchema = Joi.object({
+  lesson_id: Joi.string().uuid().required(),
+  description: Joi.string().required(),
+  expected_output: Joi.string().allow(null, ''),
+  validation_type: Joi.string().valid('exact', 'contains', 'regex', 'custom').required(),
+  validation_rule: Joi.string().allow(null, ''),
+  hint: Joi.string().allow(null, ''),
+  xp_reward: Joi.number().integer().min(0).default(25),
+  order_index: Joi.number().integer().required(),
+});
+
+const taskValidationTestSchema = Joi.object({
+  validation_type: Joi.string().valid('exact', 'contains', 'regex', 'custom').required(),
+  expected_output: Joi.string().allow(null, ''),
+  validation_rule: Joi.string().allow(null, ''),
+  output: Joi.string().allow('', null),
+});
+
+const userStatusSchema = Joi.object({
+  is_active: Joi.boolean().required(),
+});
+
+module.exports = {
+  chapterSchema,
+  lessonSchema,
+  chapterPublishSchema,
+  chapterReorderSchema,
+  taskSchema,
+  taskValidationTestSchema,
+  userStatusSchema,
+};

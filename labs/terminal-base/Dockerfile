@@ -28,7 +28,7 @@ RUN apk add --no-cache \
 # ── Hacker user — strictly non-root, no password, no sudo ────────────────
 RUN addgroup -S hacker \
     && adduser -S -G hacker -s /bin/bash -h /home/hacker hacker \
-    && passwd -l hacker   # Lock password (key-less only via docker exec)
+    && passwd -l hacker || true   # Lock password (handle case where already locked)
 
 # ── Minimal, safe shell environment ──────────────────────────────────────
 COPY --chown=hacker:hacker bashrc /home/hacker/.bashrc

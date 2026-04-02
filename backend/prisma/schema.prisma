@@ -1,8 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
@@ -11,69 +9,72 @@ datasource db {
 }
 
 model users {
-  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  username      String   @unique @db.VarChar(50)
-  email         String   @unique @db.VarChar(255)
-  password_hash String   @db.VarChar(255)
-  full_name     String?  @db.VarChar(150)
-  avatar_url    String?  @db.VarChar(500)
-  role          String   @default("student") @db.VarChar(20)
-  level         String   @default("beginner") @db.VarChar(20)
-  total_xp      Int      @default(0)
-  badges        String[] @default([])
-  is_active     Boolean  @default(true)
-  last_login    DateTime?
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
-
+  id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  username      String          @unique @db.VarChar(50)
+  email         String          @unique @db.VarChar(255)
+  password_hash String          @db.VarChar(255)
+  full_name     String?         @db.VarChar(150)
+  avatar_url    String?         @db.VarChar(500)
+  role          String          @default("student") @db.VarChar(20)
+  level         String          @default("beginner") @db.VarChar(20)
+  total_xp      Int             @default(0)
+  badges        String[]        @default([])
+  is_active     Boolean         @default(true)
+  last_login    DateTime?       @db.Timestamp(6)
+  created_at    DateTime        @default(now()) @db.Timestamp(6)
+  updated_at    DateTime        @default(now()) @updatedAt @db.Timestamp(6)
   progress      user_progress[]
   sessions      user_sessions[]
+
+  @@index([total_xp(sort: Desc)], map: "idx_users_xp")
 }
 
 model chapters {
-  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title         String   @db.VarChar(255)
-  title_bn      String?  @db.VarChar(255)
+  id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title         String          @db.VarChar(255)
+  title_bn      String?         @db.VarChar(255)
   description   String?
-  level         String   @db.VarChar(20)
+  level         String          @db.VarChar(20)
   order_index   Int
-  is_published  Boolean  @default(false)
-  thumbnail_url String?  @db.VarChar(500)
-  xp_reward     Int      @default(100)
-  created_at    DateTime @default(now())
-
+  is_published  Boolean         @default(false)
+  thumbnail_url String?         @db.VarChar(500)
+  xp_reward     Int             @default(100)
+  created_at    DateTime        @default(now()) @db.Timestamp(6)
   lessons       lessons[]
+  user_progress user_progress[]
 }
 
 model lessons {
-  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  chapter_id   String   @db.Uuid
-  title        String   @db.VarChar(255)
-  title_bn     String?  @db.VarChar(255)
+  id           String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  chapter_id   String          @db.Uuid
+  title        String          @db.VarChar(255)
+  title_bn     String?         @db.VarChar(255)
   content_md   String
   order_index  Int
-  xp_reward    Int      @default(50)
-  is_published Boolean  @default(false)
-  created_at   DateTime @default(now())
-
-  chapter      chapters       @relation(fields: [chapter_id], references: [id], onDelete: Cascade)
+  xp_reward    Int             @default(50)
+  is_published Boolean         @default(false)
+  created_at   DateTime        @default(now()) @db.Timestamp(6)
+  chapter      chapters        @relation(fields: [chapter_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   tasks        tasks[]
   progress     user_progress[]
+
+  @@index([chapter_id], map: "idx_lessons_chapter")
 }
 
 model tasks {
-  id              String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  lesson_id       String  @db.Uuid
+  id              String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  lesson_id       String          @db.Uuid
   description     String
   expected_output String?
-  validation_type String  @default("contains") @db.VarChar(20)
+  validation_type String          @default("contains") @db.VarChar(20)
   validation_rule String?
   hint            String?
-  xp_reward       Int     @default(25)
+  xp_reward       Int             @default(25)
   order_index     Int
-
-  lesson          lessons         @relation(fields: [lesson_id], references: [id], onDelete: Cascade)
+  lesson          lessons         @relation(fields: [lesson_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   progress        user_progress[]
+
+  @@index([lesson_id], map: "idx_tasks_lesson")
 }
 
 model user_progress {
@@ -84,14 +85,15 @@ model user_progress {
   task_id      String    @db.Uuid
   status       String    @default("not_started") @db.VarChar(20)
   attempts     Int       @default(0)
-  completed_at DateTime?
+  completed_at DateTime? @db.Timestamp(6)
   xp_earned    Int       @default(0)
-
-  user         users   @relation(fields: [user_id], references: [id])
-  lesson       lessons? @relation(fields: [lesson_id], references: [id])
-  task         tasks   @relation(fields: [task_id], references: [id])
+  chapters     chapters? @relation(fields: [chapter_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  lesson       lessons?  @relation(fields: [lesson_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  task         tasks     @relation(fields: [task_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user         users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@unique([user_id, task_id], name: "user_id_task_id")
+  @@index([user_id], map: "idx_progress_user")
 }
 
 model user_sessions {
@@ -99,12 +101,13 @@ model user_sessions {
   user_id      String    @db.Uuid
   container_id String?   @db.VarChar(255)
   container_ip String?   @db.VarChar(50)
-  started_at   DateTime  @default(now())
-  last_active  DateTime  @default(now())
-  expires_at   DateTime?
+  started_at   DateTime  @default(now()) @db.Timestamp(6)
+  last_active  DateTime  @default(now()) @db.Timestamp(6)
+  expires_at   DateTime? @db.Timestamp(6)
   is_active    Boolean   @default(true)
+  user         users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  user         users @relation(fields: [user_id], references: [id])
+  @@index([user_id], map: "idx_sessions_user")
 }
 
 model badges {

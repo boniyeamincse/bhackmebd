@@ -49,8 +49,12 @@ const TerminalEmulator = ({ lessonId }: Props) => {
       socket.emit('terminal:connect', { lessonId });
       startSession(lessonId);
       setConnected(true);
+      socket.emit('terminal:resize', { cols: term.cols, rows: term.rows });
 
-      resizeObserver = new ResizeObserver(() => fitAddon.fit());
+      resizeObserver = new ResizeObserver(() => {
+        fitAddon.fit();
+        socket.emit('terminal:resize', { cols: term.cols, rows: term.rows });
+      });
       resizeObserver.observe(termRef.current);
     };
 

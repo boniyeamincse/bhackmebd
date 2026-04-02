@@ -17,6 +17,9 @@ const check = (task, output) => {
     case 'regex':
       return new RegExp(validation_rule).test(output);
 
+    case 'mcq':
+      return String(output).trim() === String(expected_output).trim();
+
     case 'custom': {
       const fn = customValidators[validation_rule];
       return fn ? fn(output) : false;
