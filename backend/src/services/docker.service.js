@@ -5,9 +5,11 @@ const ContainerTimeoutQueue = require('../queues/containerTimeout.queue');
 
 const IMAGE = process.env.USER_CONTAINER_IMAGE || 'boniyeamin/bhackme-terminal:latest';
 const MEMORY = process.env.CONTAINER_MEMORY_LIMIT || '128m';
-const CPU = parseFloat(process.env.CONTAINER_CPU_LIMIT || '0.5');
-const TIMEOUT = parseInt(process.env.CONTAINER_IDLE_TIMEOUT || '3600', 10);
-const MAX_CONTAINERS = parseInt(process.env.MAX_CONCURRENT_CONTAINERS || '50', 10);
+const CPU = Number.isFinite(parseFloat(process.env.CONTAINER_CPU_LIMIT || '0.5'))
+  ? parseFloat(process.env.CONTAINER_CPU_LIMIT || '0.5')
+  : 0.5;
+const TIMEOUT = parseInt(process.env.CONTAINER_IDLE_TIMEOUT || process.env.CONTAINER_TIMEOUT || '3600', 10);
+const MAX_CONTAINERS = parseInt(process.env.MAX_CONCURRENT_CONTAINERS || process.env.MAX_CONTAINERS || '50', 10);
 const CONTAINER_NETWORK = process.env.CONTAINER_NETWORK || 'terminal-net';
 
 const containerName = (userId) => `bhackme-user-${userId}`;
@@ -24,13 +26,14 @@ const countActiveContainers = async () => {
 };
 
 const waitForCapacity = () => new Promise((resolve, reject) => {
+  let wrappedResolve;
   const timer = setTimeout(() => {
-    const idx = waitQueue.indexOf(resolve);
+    const idx = waitQueue.indexOf(wrappedResolve);
     if (idx !== -1) waitQueue.splice(idx, 1);
     reject(new Error('Terminal pool busy. Please retry in a few seconds.'));
   }, 30000);
 
-  const wrappedResolve = () => {
+  wrappedResolve = () => {
     clearTimeout(timer);
     resolve();
   };
@@ -249,9 +252,11 @@ const updateLastActive = async (userId) => {
 };
 
 const parseMemory = (str) => {
-  if (str.endsWith('m')) return parseInt(str) * 1024 * 1024;
-  if (str.endsWith('g')) return parseInt(str) * 1024 * 1024 * 1024;
-  return parseInt(str);
+  const val = String(str || '').trim().toLowerCase();
+  if (val.endsWith('m')) return parseInt(val, 10) * 1024 * 1024;
+  if (val.endsWith('g')) return parseInt(val, 10) * 1024 * 1024 * 1024;
+  const parsed = parseInt(val, 10);
+  return Number.isFinite(parsed) ? parsed : 128 * 1024 * 1024;
 };
 
 module.exports = { getOrCreateContainer, killContainer, getContainerStatus, updateLastActive };
