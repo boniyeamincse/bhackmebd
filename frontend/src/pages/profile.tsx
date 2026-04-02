@@ -18,7 +18,7 @@ function ProfilePage() {
   const [fullName, setFullName] = useState(user?.full_name || '');
   const [isEditing, setIsEditing] = useState(false);
 
-  const { data } = useQuery<{ progress: ProgressRow[] }>({
+  const { data, isLoading: progressLoading } = useQuery<{ progress: ProgressRow[] }>({
     queryKey: ['profile-progress'],
     queryFn: () => api.get('/progress').then((r) => r.data),
     enabled: !!token,
@@ -82,16 +82,18 @@ function ProfilePage() {
   };
 
   const avatar = user.avatar_url ? (user.avatar_url.startsWith('http') ? user.avatar_url : `${process.env.NEXT_PUBLIC_API_URL || ''}${user.avatar_url}`) : null;
+  const safeUserId = String(user.id || 'unknown');
+  const safeUsername = String(user.username || 'user');
 
   return (
     <div className="min-h-screen bg-[#05070a] text-gray-200">
       <Navbar />
-      <main className="max-w-6xl mx-auto px-4 py-12 space-y-8">
+      <main className="max-w-6xl mx-auto px-4 pt-24 pb-12 md:pt-28 space-y-8">
         <header className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 via-white/[0.02] to-terminal-green/5 px-6 py-8 md:px-8">
           <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-terminal-green/10 blur-3xl pointer-events-none" />
           <p className="text-gray-500 font-mono uppercase tracking-[0.25em] text-[10px]">Operator Profile</p>
           <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight leading-none uppercase mt-2">Mission Control</h1>
-          <p className="text-gray-400 mt-3 font-medium text-sm">Identity, rank progression, and chapter completion intelligence for {user.username}.</p>
+          <p className="text-gray-300 mt-3 font-medium text-sm">Identity, rank progression, and chapter completion intelligence for {safeUsername}.</p>
         </header>
 
         <section className="relative overflow-hidden bg-gray-900/30 border border-white/5 rounded-3xl p-8 backdrop-blur-md shadow-[0_0_50px_rgba(0,0,0,0.5)]">
@@ -103,9 +105,9 @@ function ProfilePage() {
             <div className="relative">
               <div className="w-40 h-40 rounded-[2.5rem] bg-gray-800 border-[3px] border-white/10 overflow-hidden flex items-center justify-center transition-all duration-500 group relative">
                 {avatar ? (
-                  <img src={avatar} alt={user.username} className="w-full h-full object-cover grayscale-[0.5] hover:grayscale-0 transition-all duration-500" />
+                  <img src={avatar} alt={safeUsername} className="w-full h-full object-cover grayscale-[0.5] hover:grayscale-0 transition-all duration-500" />
                 ) : (
-                  <span className="text-6xl font-black text-terminal-green/30 select-none">{user.username.slice(0, 1).toUpperCase()}</span>
+                  <span className="text-6xl font-black text-terminal-green/30 select-none">{safeUsername.slice(0, 1).toUpperCase()}</span>
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-100 transition-opacity"></div>
               </div>
@@ -122,10 +124,10 @@ function ProfilePage() {
             <div className="flex-1 text-center md:text-left space-y-6">
               <div>
                 <div className="flex flex-col md:flex-row md:items-baseline gap-4 mb-1">
-                  <h2 className="text-5xl font-black text-white uppercase tracking-tighter leading-none">{user.username}</h2>
+                  <h2 className="text-5xl font-black text-white uppercase tracking-tighter leading-none">{safeUsername}</h2>
                   <div className="flex gap-2">
                     <span className="bg-terminal-green/10 text-terminal-green text-[10px] px-2 py-0.5 rounded border border-terminal-green/30 font-bold uppercase tracking-widest">{user.role}</span>
-                    <span className="bg-white/5 text-white/40 text-[10px] px-2 py-0.5 rounded border border-white/10 font-bold uppercase tracking-widest">UID: {user.id.slice(0, 8)}</span>
+                    <span className="bg-white/5 text-white/40 text-[10px] px-2 py-0.5 rounded border border-white/10 font-bold uppercase tracking-widest">UID: {safeUserId.slice(0, 8)}</span>
                   </div>
                 </div>
                 <p className="text-gray-500 font-mono text-sm tracking-tight">{user.email}</p>
@@ -212,12 +214,17 @@ function ProfilePage() {
               
               <div className="space-y-4">
                 <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Decrypted Intel</p>
+                {progressLoading && (
+                  <div className="text-center py-3 border border-white/10 rounded-xl bg-white/[0.03]">
+                    <p className="text-[10px] text-gray-400 font-mono uppercase tracking-wider">Loading progress...</p>
+                  </div>
+                )}
                 <div className="space-y-3 max-h-56 overflow-auto pr-1">
                   {completedChapters.length > 0 ? (
                     completedChapters.slice(0, 10).map((id) => (
-                      <div key={id} className="flex items-center gap-3 text-[10px] font-mono text-gray-400 bg-white/5 p-3 rounded-xl border border-white/5 hover:bg-white/10 transition-all cursor-default group">
+                      <div key={String(id)} className="flex items-center gap-3 text-[10px] font-mono text-gray-400 bg-white/5 p-3 rounded-xl border border-white/5 hover:bg-white/10 transition-all cursor-default group">
                         <span className="w-1.5 h-1.5 rounded-full bg-terminal-green group-hover:animate-ping"></span>
-                        <span className="truncate">CHAPTER {id.slice(0, 8).toUpperCase()} COMPLETED</span>
+                        <span className="truncate">CHAPTER {String(id).slice(0, 8).toUpperCase()} COMPLETED</span>
                       </div>
                     ))
                   ) : (
