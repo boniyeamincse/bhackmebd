@@ -1,0 +1,293 @@
+{
+  "id": "chapter-04",
+  "title": "Permissions and Ownership Lab",
+  "level": "beginner",
+  "order_index": 4,
+  "xp_reward": 100,
+  "lessons": [
+    {
+      "title": "Learn: Linux Permissions and Ownership",
+      "order_index": 1,
+      "xp_reward": 10,
+      "content_md": "# Lab 04: Permissions and Ownership\n\nIn Linux, permissions control who can read, write, or execute files. Ownership defines which user and group are responsible for a file.\n\n## Learning Objectives\n\n- Read and understand permission strings from `ls -l`\n- Change permissions using `chmod`\n- Understand owner/group concepts and `chown` syntax\n- Apply secure defaults for scripts and sensitive files\n\n## Core Topics\n\n### 1) Permission Model\n\nEach file has three permission sets:\n\n- user (owner)\n- group\n- others\n\nExample:\n\n```\n-rw-r--r--\n```\n\n- owner: read + write\n- group: read\n- others: read\n\n### 2) Numeric Permission Values\n\n- read = 4\n- write = 2\n- execute = 1\n\nCommon modes:\n\n- 600: private file (owner rw only)\n- 644: normal text file\n- 700: private executable directory\n- 755: executable script for everyone\n\n### 3) Ownership\n\nUse `ls -l` to inspect owner/group fields.\n\nUse `chown` syntax:\n\n```bash\nchown user file\nchown user:group file\n```\n\n### 4) Security Best Practices\n\n- Never use 777 for sensitive files\n- Use 600 for secret files\n- Use 700 for private script directories\n- Check effective permissions after every change\n\nAfter reading, complete command practice, then exercises, then MCQ.",
+      "tasks": []
+    },
+    {
+      "title": "Command Practice Part 1 (10 Commands)",
+      "order_index": 2,
+      "xp_reward": 35,
+      "content_md": "## Guided Commands: Part 1\n\nCreate files and inspect default permissions.\n\n```bash\ncd ~ && pwd\nmkdir -p ~/lab4/private ~/lab4/public\ntouch ~/lab4/private/secret.txt\necho 'top secret' > ~/lab4/private/secret.txt\nls -l ~/lab4/private/secret.txt\nchmod 600 ~/lab4/private/secret.txt\nls -l ~/lab4/private/secret.txt\ntouch ~/lab4/public/readme.txt\nchmod 644 ~/lab4/public/readme.txt\nls -l ~/lab4/public/readme.txt\n```",
+      "tasks": [
+        {
+          "description": "C01: Go to home and print current directory.",
+          "expected_output": "/home/hacker",
+          "validation_type": "contains",
+          "hint": "Type: cd ~ && pwd",
+          "xp_reward": 2,
+          "order_index": 1
+        },
+        {
+          "description": "C02: Create lab4 with private and public directories.",
+          "expected_output": "private",
+          "validation_type": "contains",
+          "hint": "Type: mkdir -p ~/lab4/private ~/lab4/public && ls ~/lab4",
+          "xp_reward": 2,
+          "order_index": 2
+        },
+        {
+          "description": "C03: Create secret.txt in private directory.",
+          "expected_output": "secret.txt",
+          "validation_type": "contains",
+          "hint": "Type: touch ~/lab4/private/secret.txt && ls ~/lab4/private",
+          "xp_reward": 2,
+          "order_index": 3
+        },
+        {
+          "description": "C04: Write top secret into secret.txt.",
+          "expected_output": "top secret",
+          "validation_type": "contains",
+          "hint": "Type: echo 'top secret' > ~/lab4/private/secret.txt && cat ~/lab4/private/secret.txt",
+          "xp_reward": 2,
+          "order_index": 4
+        },
+        {
+          "description": "C05: Show permissions of secret.txt before chmod.",
+          "expected_output": "secret.txt",
+          "validation_type": "contains",
+          "hint": "Type: ls -l ~/lab4/private/secret.txt",
+          "xp_reward": 2,
+          "order_index": 5
+        },
+        {
+          "description": "C06: Set secret.txt permission to 600.",
+          "expected_output": "rw-------",
+          "validation_type": "contains",
+          "hint": "Type: chmod 600 ~/lab4/private/secret.txt && ls -l ~/lab4/private/secret.txt",
+          "xp_reward": 2,
+          "order_index": 6
+        },
+        {
+          "description": "C07: Verify permission 600 on secret.txt.",
+          "expected_output": "rw-------",
+          "validation_type": "contains",
+          "hint": "Type: ls -l ~/lab4/private/secret.txt",
+          "xp_reward": 2,
+          "order_index": 7
+        },
+        {
+          "description": "C08: Create readme.txt in public directory.",
+          "expected_output": "readme.txt",
+          "validation_type": "contains",
+          "hint": "Type: touch ~/lab4/public/readme.txt && ls ~/lab4/public",
+          "xp_reward": 2,
+          "order_index": 8
+        },
+        {
+          "description": "C09: Set readme.txt permission to 644.",
+          "expected_output": "rw-r--r--",
+          "validation_type": "contains",
+          "hint": "Type: chmod 644 ~/lab4/public/readme.txt && ls -l ~/lab4/public/readme.txt",
+          "xp_reward": 2,
+          "order_index": 9
+        },
+        {
+          "description": "C10: Verify permission on readme.txt.",
+          "expected_output": "rw-r--r--",
+          "validation_type": "contains",
+          "hint": "Type: ls -l ~/lab4/public/readme.txt",
+          "xp_reward": 2,
+          "order_index": 10
+        }
+      ]
+    },
+    {
+      "title": "Command Practice Part 2 (10 Commands)",
+      "order_index": 3,
+      "xp_reward": 35,
+      "content_md": "## Guided Commands: Part 2\n\nPractice execute permissions and ownership inspection.\n\n```bash\nprintf '#!/bin/bash\necho hello\n' > ~/lab4/public/hello.sh\nls -l ~/lab4/public/hello.sh\nchmod 755 ~/lab4/public/hello.sh\nls -l ~/lab4/public/hello.sh\n~/lab4/public/hello.sh\nchmod 700 ~/lab4/private\nls -ld ~/lab4/private\nls -l ~/lab4\nid\nls -l ~/lab4/private/secret.txt\n```",
+      "tasks": [
+        {
+          "description": "C11: Create hello.sh script with simple echo command.",
+          "expected_output": "hello.sh",
+          "validation_type": "contains",
+          "hint": "Type: printf '#!/bin/bash\necho hello\n' > ~/lab4/public/hello.sh && ls ~/lab4/public",
+          "xp_reward": 2,
+          "order_index": 1
+        },
+        {
+          "description": "C12: Check current permissions of hello.sh.",
+          "expected_output": "hello.sh",
+          "validation_type": "contains",
+          "hint": "Type: ls -l ~/lab4/public/hello.sh",
+          "xp_reward": 2,
+          "order_index": 2
+        },
+        {
+          "description": "C13: Set hello.sh permission to 755.",
+          "expected_output": "rwxr-xr-x",
+          "validation_type": "contains",
+          "hint": "Type: chmod 755 ~/lab4/public/hello.sh && ls -l ~/lab4/public/hello.sh",
+          "xp_reward": 2,
+          "order_index": 3
+        },
+        {
+          "description": "C14: Verify 755 permission on hello.sh.",
+          "expected_output": "rwxr-xr-x",
+          "validation_type": "contains",
+          "hint": "Type: ls -l ~/lab4/public/hello.sh",
+          "xp_reward": 2,
+          "order_index": 4
+        },
+        {
+          "description": "C15: Execute hello.sh script.",
+          "expected_output": "hello",
+          "validation_type": "contains",
+          "hint": "Type: ~/lab4/public/hello.sh",
+          "xp_reward": 2,
+          "order_index": 5
+        },
+        {
+          "description": "C16: Set private directory permission to 700.",
+          "expected_output": "rwx------",
+          "validation_type": "contains",
+          "hint": "Type: chmod 700 ~/lab4/private && ls -ld ~/lab4/private",
+          "xp_reward": 2,
+          "order_index": 6
+        },
+        {
+          "description": "C17: Verify directory permission for private folder.",
+          "expected_output": "rwx------",
+          "validation_type": "contains",
+          "hint": "Type: ls -ld ~/lab4/private",
+          "xp_reward": 2,
+          "order_index": 7
+        },
+        {
+          "description": "C18: List all files under lab4 with permission details.",
+          "expected_output": "hello.sh",
+          "validation_type": "contains",
+          "hint": "Type: ls -l ~/lab4",
+          "xp_reward": 2,
+          "order_index": 8
+        },
+        {
+          "description": "C19: Show your user and group IDs.",
+          "expected_output": "uid=",
+          "validation_type": "contains",
+          "hint": "Type: id",
+          "xp_reward": 2,
+          "order_index": 9
+        },
+        {
+          "description": "C20: Check owner and group of secret.txt.",
+          "expected_output": "secret.txt",
+          "validation_type": "contains",
+          "hint": "Type: ls -l ~/lab4/private/secret.txt",
+          "xp_reward": 2,
+          "order_index": 10
+        }
+      ]
+    },
+    {
+      "title": "Exercises (5)",
+      "order_index": 4,
+      "xp_reward": 10,
+      "content_md": "## Practical Exercises\n\nComplete all permission and ownership exercises.\n\n- E1-E2: easy\n- E3-E4: medium\n- E5: medium-hard",
+      "tasks": [
+        {
+          "description": "E1: Create credentials.txt in ~/lab4/private with content 'token=abc123'.",
+          "expected_output": "token=abc123",
+          "validation_type": "contains",
+          "hint": "Type: echo 'token=abc123' > ~/lab4/private/credentials.txt && cat ~/lab4/private/credentials.txt",
+          "xp_reward": 6,
+          "order_index": 1
+        },
+        {
+          "description": "E2: Set credentials.txt permission to 600 and verify.",
+          "expected_output": "rw-------",
+          "validation_type": "contains",
+          "hint": "Type: chmod 600 ~/lab4/private/credentials.txt && ls -l ~/lab4/private/credentials.txt",
+          "xp_reward": 6,
+          "order_index": 2
+        },
+        {
+          "description": "E3: Create deploy.sh in public, make it executable (755), and confirm permission.",
+          "expected_output": "rwxr-xr-x",
+          "validation_type": "contains",
+          "hint": "Type: printf '#!/bin/bash\necho deploy\n' > ~/lab4/public/deploy.sh && chmod 755 ~/lab4/public/deploy.sh && ls -l ~/lab4/public/deploy.sh",
+          "xp_reward": 6,
+          "order_index": 3
+        },
+        {
+          "description": "E4: Set public directory permission to 755 and verify.",
+          "expected_output": "rwxr-xr-x",
+          "validation_type": "contains",
+          "hint": "Type: chmod 755 ~/lab4/public && ls -ld ~/lab4/public",
+          "xp_reward": 6,
+          "order_index": 4
+        },
+        {
+          "description": "E5: List private directory details and verify owner with id command output.",
+          "expected_output": "uid=",
+          "validation_type": "contains",
+          "hint": "Type: ls -ld ~/lab4/private && id",
+          "xp_reward": 6,
+          "order_index": 5
+        }
+      ]
+    },
+    {
+      "title": "MCQ Quiz (5)",
+      "order_index": 5,
+      "xp_reward": 10,
+      "content_md": "## MCQ: Permissions and Ownership\n\nAnswer with option index (0-3). Example: submit 2.",
+      "tasks": [
+        {
+          "description": "Q1: Which permission mode gives owner read/write only?",
+          "expected_output": "1",
+          "validation_type": "mcq",
+          "validation_rule": "[\"755\",\"600\",\"644\",\"777\"]",
+          "hint": "Submit index 0-3.",
+          "xp_reward": 4,
+          "order_index": 1
+        },
+        {
+          "description": "Q2: Which command changes file permissions?",
+          "expected_output": "2",
+          "validation_type": "mcq",
+          "validation_rule": "[\"chown\",\"ls\",\"chmod\",\"id\"]",
+          "hint": "Submit index 0-3.",
+          "xp_reward": 4,
+          "order_index": 2
+        },
+        {
+          "description": "Q3: What does 755 mean for a script?",
+          "expected_output": "0",
+          "validation_type": "mcq",
+          "validation_rule": "[\"owner full, group/others read+execute\",\"owner read only\",\"everyone write only\",\"no one execute\"]",
+          "hint": "Submit index 0-3.",
+          "xp_reward": 4,
+          "order_index": 3
+        },
+        {
+          "description": "Q4: Which command shows user and group IDs?",
+          "expected_output": "3",
+          "validation_type": "mcq",
+          "validation_rule": "[\"pwd\",\"whoami\",\"stat\",\"id\"]",
+          "hint": "Submit index 0-3.",
+          "xp_reward": 4,
+          "order_index": 4
+        },
+        {
+          "description": "Q5: Which setting is safest for private secrets file?",
+          "expected_output": "2",
+          "validation_type": "mcq",
+          "validation_rule": "[\"777\",\"755\",\"600\",\"644\"]",
+          "hint": "Submit index 0-3.",
+          "xp_reward": 4,
+          "order_index": 5
+        }
+      ]
+    }
+  ]
+}
