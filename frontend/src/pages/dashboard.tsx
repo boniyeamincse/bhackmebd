@@ -36,32 +36,62 @@ function Dashboard() {
 
       <main className="max-w-7xl mx-auto px-6 pt-28 pb-12 relative z-10">
         {/* Header Section */}
-        <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div className="flex items-center gap-6">
+        <div className="mb-12 flex flex-col lg:flex-row lg:items-center justify-between gap-8 bg-gray-900/40 p-8 rounded-[2rem] border border-white/5 backdrop-blur-md relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none group-hover:opacity-[0.06] transition-opacity">
+             <svg className="w-64 h-64 text-terminal-green" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08s5.97 1.09 6 3.08c-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+          </div>
+
+          <div className="flex flex-col md:flex-row items-center gap-8 relative z-10">
             <motion.div 
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               className="relative"
             >
-              <div className="absolute inset-0 bg-green-500/20 blur-xl rounded-full animate-glow" />
-              <LevelBadge level={user.level} />
+              <div className="w-24 h-24 rounded-[1.5rem] bg-gray-800 border-[3px] border-white/10 overflow-hidden flex items-center justify-center shadow-2xl relative group/avatar">
+                {user.avatar_url ? (
+                  <img 
+                    src={user.avatar_url.startsWith('http') ? user.avatar_url : `${process.env.NEXT_PUBLIC_API_URL || ''}${user.avatar_url}`} 
+                    alt={user.username} 
+                    className="w-full h-full object-cover grayscale-[0.3] group-hover/avatar:grayscale-0 transition-all duration-500" 
+                  />
+                ) : (
+                  <span className="text-3xl font-black text-terminal-green/30">{user.username.slice(0, 1).toUpperCase()}</span>
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60"></div>
+              </div>
+              <div className="absolute -bottom-2 -right-2 transform scale-75 origin-bottom-right">
+                 <LevelBadge level={user.level} />
+              </div>
             </motion.div>
-            <div>
-              <motion.h1 
+
+            <div className="text-center md:text-left">
+              <motion.div 
                 initial={{ x: -20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
-                className="text-4xl font-bold text-white mb-2 tracking-tight"
+                className="flex flex-col md:flex-row md:items-baseline gap-3 mb-1"
               >
-                Welcome, {user.username}
-              </motion.h1>
+                <h1 className="text-4xl font-black text-white uppercase tracking-tighter leading-none">
+                  SECURE SESSION: {user.username}
+                </h1>
+                <span className="bg-terminal-green/10 text-terminal-green text-[10px] px-2 py-0.5 rounded border border-terminal-green/30 font-bold uppercase tracking-widest self-center md:self-baseline">
+                  {user.role}
+                </span>
+              </motion.div>
+              
+              <p className="text-xl text-gray-400 font-medium tracking-tight mb-4">{user.full_name || 'Designation Pending'}</p>
+              
               <div className="w-full max-w-md">
                 <XPBar xp={user.total_xp} />
               </div>
             </div>
           </div>
           
-          <Link href="/chapters" className="bg-green-500 text-black font-bold px-6 py-3 rounded-xl hover:bg-green-400 transition-all shadow-[0_0_20px_rgba(34,197,94,0.2)] text-center">
-            Continue Learning
+          <Link href="/chapters" className="relative group/btn z-10 shrink-0">
+            <div className="absolute inset-0 bg-terminal-green/20 blur-xl rounded-xl opacity-0 group-hover/btn:opacity-100 transition-opacity"></div>
+            <div className="bg-terminal-green text-black font-black px-8 py-4 rounded-xl flex items-center gap-3 transition-all active:scale-95 shadow-[0_4px_20px_rgba(0,255,159,0.2)]">
+              <span className="uppercase tracking-widest text-xs">Resume Operations</span>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+            </div>
           </Link>
         </div>
 
