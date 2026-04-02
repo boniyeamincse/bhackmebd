@@ -9,6 +9,18 @@ const LEVELS = [
 ];
 
 const award = async (userId, xp, taskId) => {
+  const task = await prisma.tasks.findUnique({
+    where: { id: taskId },
+    select: {
+      lesson_id: true,
+      lesson: {
+        select: {
+          chapter_id: true,
+        },
+      },
+    },
+  });
+
   const user = await prisma.users.update({
     where: { id: userId },
     data: { total_xp: { increment: xp } },
@@ -17,8 +29,22 @@ const award = async (userId, xp, taskId) => {
 
   await prisma.user_progress.upsert({
     where: { user_id_task_id: { user_id: userId, task_id: taskId } },
-    update: { status: 'completed', xp_earned: xp, completed_at: new Date() },
-    create: { user_id: userId, task_id: taskId, status: 'completed', xp_earned: xp, completed_at: new Date() },
+    update: {
+      status: 'completed',
+      xp_earned: xp,
+      completed_at: new Date(),
+      lesson_id: task?.lesson_id || null,
+      chapter_id: task?.lesson?.chapter_id || null,
+    },
+    create: {
+      user_id: userId,
+      task_id: taskId,
+      status: 'completed',
+      xp_earned: xp,
+      completed_at: new Date(),
+      lesson_id: task?.lesson_id || null,
+      chapter_id: task?.lesson?.chapter_id || null,
+    },
   });
 
   const newLevel = LEVELS.find((l) => user.total_xp >= l.min && user.total_xp <= l.max)?.label;

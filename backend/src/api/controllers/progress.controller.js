@@ -13,6 +13,12 @@ const getProgress = async (req, res, next) => {
             id: true,
             lesson_id: true,
             order_index: true,
+            lesson: {
+              select: {
+                id: true,
+                chapter_id: true,
+              },
+            },
           },
         },
         lesson: {
@@ -26,8 +32,8 @@ const getProgress = async (req, res, next) => {
     });
 
     const map = progress.map((p) => ({
-      chapterId: p.chapter_id || p.lesson?.chapter_id || null,
-      lessonId: p.lesson_id || p.task?.lesson_id || null,
+      chapterId: p.chapter_id || p.lesson?.chapter_id || p.task?.lesson?.chapter_id || null,
+      lessonId: p.lesson_id || p.task?.lesson_id || p.task?.lesson?.id || null,
       taskId: p.task_id,
       status: p.status,
       attempts: p.attempts,

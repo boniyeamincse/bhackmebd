@@ -10,6 +10,7 @@ type Chapter = {
   id: string;
   title: string;
   description?: string;
+  level?: string;
   difficulty?: string;
   xp_reward?: number;
 };
@@ -38,7 +39,8 @@ function ChapterListPage() {
 
   const filtered = useMemo(() => {
     return chapters.filter((chapter) => {
-      const matchesLevel = levelFilter === 'all' || (chapter.difficulty || '').toLowerCase() === levelFilter;
+      const chapterLevel = (chapter.level || chapter.difficulty || '').toLowerCase();
+      const matchesLevel = levelFilter === 'all' || chapterLevel === levelFilter;
       const matchesSearch = chapter.title.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesLevel && matchesSearch;
     });
@@ -111,7 +113,8 @@ function ChapterListPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map((chapter) => {
             const completion = completionByChapter[chapter.id] || 0;
-            const diffColor = getDifficultyColor(chapter.difficulty);
+            const chapterLevel = chapter.level || chapter.difficulty || 'beginner';
+            const diffColor = getDifficultyColor(chapterLevel);
             const locked = false; // Simplified for now as requested labs should be accessible
 
             return (
@@ -124,7 +127,7 @@ function ChapterListPage() {
                 
                 <div className="flex justify-between items-start mb-6">
                   <span className={`text-[10px] font-black px-2 py-1 rounded border uppercase tracking-widest ${diffColor}`}>
-                    {chapter.difficulty || 'beginner'}
+                    {chapterLevel}
                   </span>
                   <span className="text-[10px] font-mono text-gray-500">ID: {chapter.id.slice(0, 8)}</span>
                 </div>
